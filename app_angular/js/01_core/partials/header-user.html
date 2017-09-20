@@ -1,0 +1,94 @@
+<style>
+    .charthead canvas {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: auto;
+    }
+    
+    .charthead .percent {
+        position: absolute;
+        left: 47%;
+        top: -14%;
+        /*margin-left: 6px;*/
+        /*margin-top: 54px;*/
+    }
+</style>
+
+<div class="user-display" style="overflow: auto;">
+
+    <div class="icon-port" onclick="$('#portFile').click()">
+        <span class="s7-camera" data-container="body" data-toggle="popover" data-placement="top" title="Cambiar foto portada." data-content="Indicates whether or not this product get other prep before shipment" data-original-title=""></span>
+    </div>
+
+    <input type="file" id="portFile" file-model="$parent.portFile" style="display: none;" />
+
+    <div class="photo">
+        <img ng-src="{{ (GlbUsuario.usuarioPortada | getValidaImagen:'P' | slugify) + '?v=' + $parent.rand }}">
+    </div>
+
+    <div class="bottom col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="avatar user-avatar" ng-style="{'background-image': 'url(' + (GlbUsuario.usuarioFoto | getValidaImagen:'U':GlbUsuario.usuarioSexo) + '?v=' + $parent.rand + ')'}">
+
+            <input id="fileUpload" type="file" file-model="$parent.myFile" name="file" required ng-show="$parent.config.Actualiza_Foto_Mis_Datos=='S'">
+
+            <svg ng-show="$parent.config.Actualiza_Foto_Mis_Datos=='S'" version="1.1" id="camera" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 25 15" enable-background="new 0 0 25 15" xml:space="preserve">
+                     <path id="cameraFrame" fill="none" stroke="white" stroke-miterlimit="10" d="M23.1,14.1H1.9c-0.6,0-1-0.4-1-1V1.9c0-0.6,0.4-1,1-1h21.2
+                         c0.6,0,1,0.4,1,1v11.3C24.1,13.7,23.7,14.1,23.1,14.1z"/>
+                      <path id="circle" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-miterlimit="12" d="M17.7,7.5c0-2.8-2.3-5.2-5.2-5.2S7.3,4.7,7.3,7.5s2.3,5.2,5.2,5.2
+                         S17.7,10.3,17.7,7.5z"/>
+                      <g id="plus">
+                         <path fill="none" id="plusLine" class="line" stroke="#ffffff" stroke-linecap="round" stroke-miterlimit="10" d="M20.9,2.3v4.4"/>
+                         <path fill="none" class="line"stroke="#ffffff" stroke-linecap="round" stroke-miterlimit="10" d="M18.7,4.6h4.4"/>
+                      </g>
+                     </svg>
+            <div id="openModal">
+                <span>Drop here or</span>
+            </div>
+            <!--<span class="status"></span>-->
+        </div>
+
+        <div class="user-info col-lg-4 col-md-12 col-sm-12 col-xs-12">
+            <h4 class="text-info">{{ ( GlbUsuario.usuarioNombreCasual | getNombrePropio:false) }}</h4>
+            <span>{{ GlbUsuario.cargoNombre | getNombrePropio:false }}</span><br>
+            <span>{{ GlbUsuario.departamentoNombre | getNombrePropio:false }}</span><br>
+
+            <a ui-sref="opcion({name:'miequipo'})" class="text-info" style="float:right;" ng-show="dashboardItem=='S'">ver <span class="s7-expand2"></span></a><br>
+
+            <div class="progress" ng-show="dashboardItem=='S'">
+                <div style="width:{{ GlbUsuario.usuarioPorcentajePerfil }}%" class="progress-bar progress-bar-success progress-bar-striped">{{ GlbUsuario.usuarioPorcentajePerfil }}% Perfil</div>
+            </div>
+            <div ng-show="dashboardItem=='S'">
+                <a ui-sref="opcion({name:'miperfil'})" class="text-info" style="float:right;">Actualizar datos del perfil <span class="s7-angle-right"></span></a>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 text-center" ng-if="GlbUsuario.cumpleExpe!=null && GlbUsuario.cumpleEduc!=null && GlbUsuario.cumpleForm!=null">
+
+            <!-- charts -->
+            <div class="col-lg-4 col-md-4 col-sm-4 text-center">
+                <span class="col-mid-chi" chartgraf data-color="#9966FF" data-percent="{{ GlbUsuario.cumpleEduc | num }}">
+					<span style="position: absolute;width: 80px;top: 31px">{{ GlbUsuario.cumpleEduc | num }}%</span>
+                </span>
+                <h4><span style="color:#5f5faf;">Educación</span></h4>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 text-center">
+                <span class="col-mid-chi" chartgraf data-color="#FFC000" data-percent="{{ GlbUsuario.cumpleForm | num }}">
+					<span style="position: absolute;width: 80px;top: 31px">{{ GlbUsuario.cumpleForm | num }}%</span>
+                </span>
+                <h4><span style="color:#dfa800;">Formación</span></h4>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 text-center">
+                <span class="col-mid-chi" chartgraf data-color="#92D050" data-percent="{{ GlbUsuario.cumpleExpe | num }}">
+					<span style="position: absolute;width: 80px;top: 31px">{{ GlbUsuario.cumpleExpe | num }}%</span>
+                </span>
+                <h4><span style="color:#72ae2f;">Experiencia</span></h4>
+            </div>
+
+        </div>
+
+    </div>
+</div>

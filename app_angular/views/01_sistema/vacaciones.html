@@ -1,0 +1,440 @@
+<div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="info-block panel panel-default">
+
+            <div class="panel-body">
+                <div class="tab-container">
+
+                    <!-- Opciones -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#datos" data-toggle="tab" aria-expanded="false">Nueva 
+                        <li class="" ng-show="$parent.alias!='talento'"><a href="#kardex" data-toggle="tab" aria-expanded="true">Kárdex Vacaciones</a></li>
+                        <li class="" ng-show="$parent.alias!='talento' && $parent.alias!='volvo' && $parent.alias!='mannucci' && $parent.alias!='autrisa' && $parent.alias!='huancayo' && $parent.alias!='tacna'"><a href="#saldos" data-toggle="tab" aria-expanded="true">Saldos Anuales</a></li>
+
+                        <li class=""><a href="#aprobaciones" data-toggle="tab" aria-expanded="false">Aprobaciones</a></li>
+                        <li class=""><a href="#missolicitudes" ng-click="consultaMisvacaiones()" data-toggle="tab" aria-expanded="false">Mis Solicitudes</a></li>
+                        <li class=""><a href="#equipo" data-toggle="tab" aria-expanded="false" ng-show="(miequipo.subordinados | keylength) > 0">Mi Equipo</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <!-- Nueva Solicitud -->
+                        <div id="datos" class="tab-pane cont active">
+
+                            <!-- Instrucciones -->
+                            <div class="col-md-12 col-sm-12">
+                                <h4 class="text-warning">Instrucciones</h4>
+                                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                    <div class="icon"><span class="s7-info"></span></div>
+                                    <div class="message">
+                                        <strong>1. </strong>Se recomienda que el número de días solicitados no sea superior al saldo disponible.<br>
+                                        <strong>2. </strong>Las solicitudes de vacaciones serán aprobadas por el Jefe Inmediato.<br>
+                                        <strong>3. </strong>Las solicitudes de vacaciones deberán ser realizadas con un tiempo prudente de anticipación.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Formulario Solicitud -->
+                            <form ng-submit="solicitar()">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Apellidos y Nombres</label>
+                                        <input type="text" placeholder="" ng-model="vacacion.nombres" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Ingreso a la Empresa</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" ng-model="vacacion.usuarioFechaIngreso" readonly="readonly" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="vacacion.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="" ng-model="vacacion.departamentoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" ng-model="vacacion.cargoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Saldo de Días de Vacaciones</label>
+                                        <input type="text" placeholder="" ng-model="vacacion.saldoVacaciones" readonly="readonly" class="form-control vacacion-y">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Días Solicitados</label>
+                                        <input type="text" placeholder="" ng-model="vacacion.diasSolicitados" ng-change="cargaDatosVacaciones()" onkeypress="return controla_digitacion_decimal(event,this,0);" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Inicio Vacaciones</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" ng-model="vacacion.fechaInicioVacaciones" ng-change='cargaDatosVacaciones()' class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Fin Vacaciones</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="vacacion.fechaFinVacaciones" class="form-control vacacion"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Días Asignados</label>
+                                        <input type="text" ng-model="vacacion.diasAsignados" readonly="readonly" class="form-control vacacion">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Incorporación</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="vacacion.fechaIncorporacion" class="form-control vacacion"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-body" ng-if="$parent.alias=='talento' && vacacion.diasFinSemana > 0 && mensajeAjusteSaldo=='S'">
+                                    <div role="alert" class="alert alert-danger alert-icon alert-border-color alert-dismissible">
+                                        <div class="icon"><span class="s7-check"></span></div>
+                                        <div class="message">
+                                            <span class="text-danger col-sm-12" style="font-size: 15px;padding-bottom: 10px;">Los datos de su solicitud de vacaciones incluyen días de fin de semana; por favor indíquenos si estos días ya fueron considerados.</span>
+
+                                            <div class="col-sm-12">
+                                                <div class="am-radio inline">
+                                                    <input type="radio" name="finSemana" value="S" ng-model="vacacion.validacion" ng-change="changeWekend()" id="rad4">
+                                                    <label for="rad4">Si</label>
+                                                </div>
+                                                <div class="am-radio inline">
+                                                    <input type="radio" name="finSemana" value="N" ng-model="vacacion.validacion" ng-change="changeWekend()" id="rad5">
+                                                    <label for="rad5">No</label>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Comandos -->
+                                <div class="col-md-12 col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-space btn-primary">Solicitar</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <!-- Kardex de Vacaciones -->
+                        <div id="kardex" class="tab-pane cont">
+                            <table class="table table-striped table-fw-widget table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in kardex">
+                                        <td>{{ item.solicitudVacacionFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaInicio | limitTo:10 | limitTo:-2}}</td>
+                                        <td>{{ item.solicitudVacacionDescripcion }}</td>
+                                        <td class="text-center" ng-class="item.solicitudVacacionCantidad<0?'text-danger':''">{{ item.solicitudVacacionCantidad }} días</td>
+                                        <td class="text-center" ng-class="item.solicitudVacacionSaldo<0?'text-danger':''">{{ item.solicitudVacacionSaldo }} días</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Saldos por Anios -->
+                        <div id="saldos" class="tab-pane cont">
+                            <table class="table table-striped table-fw-widget table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Año Inicial</th>
+                                        <th>Año Final</th>
+                                        <th>Saldo Inicial</th>
+                                        <th>Días Gozados</th>
+                                        <th>Días Ganados</th>
+                                        <th>Días Adicionales</th>
+                                        <th>Saldo Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in saldos">
+                                        <td class="text-center">{{ item.saldovacacionAnioInicial }}</td>
+                                        <td class="text-center">{{ item.saldovacacionAnioFinal }}</td>
+                                        <td class="text-center" ng-class="item.saldovacacionSaldoInicial<0?'text-danger':''">{{ item.saldovacacionSaldoInicial }}</td>
+                                        <td class="text-center">{{ item.saldovacacionDiasUsados }}</td>
+                                        <td class="text-center">{{ item.saldovacacionDiasGanados }}</td>
+                                        <td class="text-center">{{ item.saldovacacionDiasAdicionales }}</td>
+                                        <td class="text-center" ng-class="item.saldovacacionSaldoFinal<0?'text-danger':''">{{ item.saldovacacionSaldoFinal }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mis Solicitues -->
+                        <div id="missolicitudes" class="tab-pane cont">
+                            <table class="table table-striped table-fw-widget table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center">Fecha de Solicitud</th>
+                                        <th style="text-align:center">Período</th>
+                                        <th style="text-align:center">Fecha de Incorporación</th>
+                                        <th style="text-align:center">Estado</th>
+                                        <th style="text-align:center">Descargar PDF</th>
+                                        <th style="text-align:center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in listamissolicitudes">
+                                        <td style="text-align:center">{{ item.solicitudVacacionFechaSolicitud | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaSolicitud | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaSolicitud | limitTo:10
+                                            | limitTo:-2}}</td>
+                                        <td style="text-align:center">{{ item.solicitudVacacionFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaInicio | limitTo:10 | limitTo:-2}}
+                                            / {{ item.solicitudVacacionFechaFin | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaFin | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaFin | limitTo:10 | limitTo:-2}}</td>
+                                        <td style="text-align:center">{{ item.solicitudVacacionFechaIncorporacion | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaIncorporacion | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaIncorporacion
+                                            | limitTo:10 | limitTo:-2}}</td>
+                                        <td class="text-center {{ (item.solicitudVacacionEstado=='A'?'text-success':(item.solicitudVacacionEstado=='P'?'text-warning':(item.solicitudVacacionEstado=='C'?'text-muted':'text-danger'))) }}">{{ (item.solicitudVacacionEstado=='A'?'Aprobada':(item.solicitudVacacionEstado=='P'?'Pendiente':(item.solicitudVacacionEstado=='C'?'Cancelada':'Postergada'))) }}</td>
+                                        <td class="text-center" ng-class="item.solicitudVacacionSaldo<0?'text-danger':''">
+                                            <a ng-click="descargarPdfVacacionItem(item)" ng-show="item.solicitudVacacionEstado=='A' && item.existe_pdf=='0' && item.link_pdf!=''" style="cursor: pointer" class="i-circle text-info"><i class="icon s7-download"></i></a>
+                                            <a ng-show="item.solicitudVacacionEstado!='A' || (item.link_pdf=='' || item.existe_pdf=='1')" style="cursor: pointer">--</a>
+                                        </td>
+                                        <td class="text-center" ng-class="item.solicitudVacacionSaldo<0?'text-danger':''">
+                                            <button class="btn btn-danger" type="button" ng-click="cancelarSolicitud(item)" ng-show="item.solicitudVacacionEstado=='P'">Cancelar</button>
+                                            <a ng-show="item.solicitudVacacionEstado!='P'" style="cursor: pointer">--</a>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Aprobaciones -->
+                        <div id="aprobaciones" class="tab-pane">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" placeholder="" class="form-control" ng-model="filtro.nombre">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    <select class="form-control" ng-model="filtro.estado">
+                                        <option ng-repeat="item in options" value="{{ item.value }}">{{ item.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Inicio</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechainicio" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Fin</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechafin" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 spacer text-center">
+                                <button type="button" class="btn btn-space btn-primary" ng-click="buscar()">Buscar</button>
+                                <button type="button" class="btn btn-space btn-primary">Limpiar</button>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table table-striped table-fw-widget table-hover" ng-show="(listaaprobar | filter:{solicitudVacacionEstado:estado} | keylength)>0 || (listaaprobarsegundo | filter:{solicitudSegundoVacacionEstado:estado} | keylength)>0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Empleado</th>
+                                            <th class="text-center">Fecha</th>
+                                            <th class="text-center">Días</th>
+                                            <th class="text-center">{{ (estado=='P'?'Acción':'Estado') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-border-x">
+                                        <tr ng-repeat="item in listaaprobar" ng-show="item.solicitudVacacionEstado==estado">
+                                            <td class="user-avatar" nowrap> <img ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.sex_usuario ) }}?v={{rand}}">{{ item.usuarioNombreCompuesto }}</td>
+                                            <td align="center" nowrap>{{ item.solicitudVacacionFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaInicio | limitTo:10 | limitTo:-2}}</td>
+                                            <td align="center">{{ item.solicitudVacacionDiasSolicitados }}</td>
+                                            <td align="center">
+                                                <div class="input-group  col-md-12" ng-show="estado=='P'">
+                                                    <input type="text" class="form-control" ng-model="item.solicitudVacacionObservacion" placeholder="Descripción">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a ng-click="AccionSolicitud(item,'A')">Aprobar</a></li>
+                                                            <li><a ng-click="AccionSolicitud(item,'N')">Negar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <p ng-show="estado!='P'" class="{{ (estado=='A'?'text-success':'text-danger') }}">{{ (estado=='A'?'Aprobada':'Negado') }}</p>
+                                            </td>
+                                        </tr>
+
+                                        <tr ng-repeat="item in listaaprobarsegundo" ng-show="item.solicitudSegundoVacacionEstado==estado">
+                                            <td class="user-avatar" nowrap> <img ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.sex_usuario ) }}?v={{rand}}">{{ item.usuarioNombreCompuesto }}</td>
+                                            <td align="center" nowrap>{{ item.solicitudVacacionFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaInicio | limitTo:10 | limitTo:-2}}</td>
+                                            <td align="center">{{ item.solicitudVacacionDiasSolicitados }}</td>
+                                            <td align="center">
+                                                <div class="input-group  col-md-12" ng-show="estado=='P'">
+                                                    <input type="text" class="form-control" ng-model="item.solicitudVacacionObservacion" placeholder="Descripción">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a ng-click="AccionSolicitud(item,'A')">Aprobar</a></li>
+                                                            <li><a ng-click="AccionSolicitud(item,'N')">Negar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <p ng-show="estado!='P'" class="{{ (estado=='A'?'text-success':'text-danger') }}">{{ (estado=='A'?'Aprobada':'Negado') }}</p>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="icon-container" ng-show="(listaaprobar | filter:{solicitudVacacionEstado:estado} | keylength)==0 && (listaaprobarsegundo | filter:{solicitudSegundoVacacionEstado:estado} | keylength)==0 && accion">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene aprobaciones.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mi equipo -->
+                        <div id="equipo" class="tab-pane">
+
+
+                            <!--<div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Empleado</label>
+                                    <select class="form-control" ng-model="formmiequipo.usuario">
+                                        <option ng-repeat="item in miequipo.subordinados" value="{{ item.usuarioUser }}">{{ item.usuarioNombre1 }} {{ item.usuarioApellido1 }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 spacer">
+                                <button type="button" class="btn btn-space btn-primary" ng-click="consultarKardexEmmpleado()">Consultar</button>
+                                <button type="button" class="btn btn-space btn-primary">Limpiar</button>
+                            </div>-->
+
+                            <div class="col-md-12 col-sm-12 spacer" ng-repeat-start="item in miequipo.subordinados">
+
+                                <div class="list-group tickets xs-mt-10" id="header">
+                                    <div class="list-group-item" href="#" style="overflow: hidden;margin-bottom: 10px;background: #F2F2F2;border-radius: 4px;border: 0;">
+                                        <div class="col-sm-12 col-md-12">
+                                            <div class="col-md-2 xs-pr-0">
+                                                <img class="avatar" id="avatar" style="width: 68px;height: 68px" ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.usuarioSexo ) }}?v={{rand}}">
+                                            </div>
+
+                                            <div class="col-md-4 xs-pl-0 xs-mt-10">
+                                                <span><b>{{ item.usuarioNombre1 + ' ' + item.usuarioNombre2 + ' ' + item.usuarioApellido1 + ' ' + item.usuarioApellido2 | getNombrePropio:true}}</b></span><br>
+                                                <span>{{ item.cargoNombre | getNombrePropio:true }}</span><br>
+                                            </div>
+
+                                            <div class="col-sm-4 col-md-4 text-center xs-mt-20">
+
+                                                <h5>Saldo de Vacaciones: {{ item.saldoVacacionesEmpleado }}</h5>
+
+                                            </div>
+
+                                            <div class="col-sm-2 col-md-2 text-center xs-mt-20">
+                                                <a ng-show="$parent.alias!='talento'" class="text-info" href="#" ng-click="consultarKardexEmmpleado($index)">
+                                                    Ver Kárdex
+                                                </a>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-repeat-end="" class="col-md-12 col-sm-12" ng-if="$index==selectKardex">
+                                <table class="table table-striped table-fw-widget table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Descripción</th>
+                                            <th>Cantidad</th>
+                                            <th>Saldo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in item.kardexempleado">
+                                            <td>{{ item.solicitudVacacionFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudVacacionFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudVacacionFechaInicio | limitTo:10 | limitTo:-2}}</td>
+                                            <td>{{ item.solicitudVacacionDescripcion }}</td>
+                                            <td class="text-center" ng-class="item.solicitudVacacionCantidad<0?'text-danger':''">{{ item.solicitudVacacionCantidad }} días</td>
+                                            <td class="text-center" ng-class="item.solicitudVacacionSaldo<0?'text-danger':''">{{ item.solicitudVacacionSaldo }} días</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- widget -->
+    <widget-calendario class="col-lg-3 hidden-md hidden-xs" data="{{ calendario }}"></widget-calendario>
+
+    <div id="mod-info" tabindex="-1" role="dialog" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close"><i class="icon s7-close"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <h4>Su solicitud ha sido creada con éxito!</h4>
+                    </div>
+                    <div class="text-center">
+                        <a ng-click="descargarPdfVacacion()" style="cursor: pointer" class="i-circle text-info"><i class="icon s7-download"></i></a>
+                        <p>Descargar solicitud</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-info">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

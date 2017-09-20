@@ -1,0 +1,345 @@
+<style>
+    .bp-photo-frame {
+        top: 30px !important;
+        left: 10px !important;
+    }
+
+    div[name=email],
+    div[name=description] {
+        padding-left: 15px;
+        width: 150px !important;
+    }
+
+    div.bp-title-frame {
+        height: 23px !important;
+    }
+</style>
+
+<div class="user-profile">
+<header-user dashboard-item="P"></header-user>
+<div class="row">
+<div class="col-md-12 col-sm-12">
+<div class="info-block panel panel-default">
+<div class="panel-body">
+<div class="tab-container">
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#cargo" data-toggle="tab" aria-expanded="false">Mi Cargo</a></li>
+    <li class=""><a href="#perfil" data-toggle="tab" aria-expanded="true">Mi Perfil</a></li>
+    <li class=""><a href="#orgdiagram" data-toggle="tab" aria-expanded="false">Mi Organigrama</a></li>
+</ul>
+<div class="tab-content">
+
+<!-- Mi Cargo -->
+<div id="cargo" class="tab-pane cont active">
+    <div class="col-md-12 col-sm-12">
+        <!-- Funciones -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover" border=0>
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Funciones</b></h4>
+                    </th>
+                    <th>
+                        <h4 class="text-info text-center"><b>Peso</b></h4>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].funciones">
+                    <td style="padding:20px;">{{ item.funcionNombre }} </td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras==null">--</td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras!=null">{{ item.funcionPeso }}% </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="icon-container" ng-show="(cargo[0].funciones | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene funciones.</span>
+            </div>
+        </div>
+        <!-- Competencias -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Competencias</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(cargo[0].competencias | keylength)>0">
+                    <th class="text-left" style="padding:20px;">Competencias</th>
+                    <th class="text-center hidden-xs" style="padding:20px 0px;">Competencia Macro</th>
+                    <th class="text-center">Nivel<br>Requerido</th>
+                    <!--<th class="text-center">Cumple</th>-->
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].competencias">
+                    <td style="padding:20px;">{{ item.competenciaNombre }}</td>
+                    <td class="text-center hidden-xs">{{ item.competenciamacroNombre }}</td>
+                    <td class="text-center">{{ item.valorNombre }}</td>
+                    <!--<td class="text-center"><h1><span class="s7-check text-success"></span></h1></td>-->
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="icon-container" ng-show="(cargo[0].competencias | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene competencias.</span>
+            </div>
+        </div>
+        <!-- Educacion -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Educación</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'E'} | keylength)>0">
+                    <th class="text-left" style="padding:20px;">Tema</th>
+                    <th class="text-center hidden-xs" style="padding:20px 0px;">Area</th>
+                    <th class="text-center">Nivel<br>Requerido</th>
+                    <th class="text-center" style="padding:20px 00px;">Cumple</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].perfilcargo | filter:{areaTemaTipo:'E'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center  hidden-xs">{{ item.areaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center">{{ item.cargoTemaNivel | niveleducacion }}</td>
+                    <td class="text-center">
+                        <h1><span class="s7-check text-success" ng-show="item.cargoCumpleUsuario=='S'"></span></h1>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="icon-container" ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'E'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene educación.</span>
+            </div>
+        </div>
+        <!-- Formacion -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Formación</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'F'} | keylength)>0">
+                    <th class="text-left" style="padding:20px;">Tema</th>
+                    <th class="text-center hidden-xs" style="padding:20px 0px;">Area</th>
+                    <th class="text-center" style="padding:20px 0px;">No. Horas</th>
+                    <th class="text-center" style="padding:20px 0px;">Cumple</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].perfilcargo | filter:{areaTemaTipo:'F'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center hidden-xs">{{ item.areaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center">{{ item.cargoTemaHoras }} h.</td>
+                    <td class="text-center">
+                        <h1><span class="s7-check text-success" ng-show="item.cargoCumpleUsuario=='S'"></span></h1>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="icon-container" ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'F'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene formación.</span>
+            </div>
+        </div>
+        <!-- Experiencia -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Experiencia</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'X'} | keylength)>0">
+                    <th class="text-left" style="padding:20px;">Tema</th>
+                    <th class="text-center hidden-xs" style="padding:20px 0px;">Area</th>
+                    <th class="text-center" style="padding:20px 0px;">Tiempo</th>
+                    <th class="text-center" style="padding:20px 0px;">Cumple</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].perfilcargo | filter:{areaTemaTipo:'X'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center hidden-xs">{{ item.areaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras==null && item.cargoTemaMeses==null"></td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras!=null && item.cargoTemaMeses==null">{{ item.cargoTemaHoras }} años</td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras==null && item.cargoTemaMeses!=null">{{ item.cargoTemaMeses }} meses</td>
+                    <td class="text-center" ng-if="item.cargoTemaHoras!=null && item.cargoTemaMeses!=null">{{ item.cargoTemaHoras }} años, {{ item.cargoTemaMeses }} meses</td>
+                    <td class="text-center">
+                        <h1><span class="s7-check text-success" ng-show="item.cargoCumpleUsuario=='S'"></span></h1>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="icon-container" ng-show="(cargo[0].perfilcargo | filter:{areaTemaTipo:'X'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene experiencia.</span>
+            </div>
+        </div>
+        <!-- Responsabilidades -->
+        <div class="table-responsive" ng-show="$parent.alias!='volvo' && $parent.alias!='mannucci' && $parent.alias!='autrisa' && $parent.alias!='huancayo' && $parent.alias!='tacna'">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        <h4 class="text-info"><b>Responsabilidades</b></h4>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].responsabilidades">
+                    <td width="40%" style="padding:20px;">{{ item.responsabilidadNombre | getNombrePropio:true }}</td>
+                    <td width="60%">{{ item.responsabilidadDescripcion | getNombrePropio:true }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="icon-container" ng-show="(cargo[0].responsabilidades | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene responsabilidades.</span>
+            </div>
+        </div>
+        <!-- Condiciones -->
+        <div class="table-responsive" ng-show="$parent.alias!='volvo' && $parent.alias!='mannucci' && $parent.alias!='autrisa' && $parent.alias!='huancayo' && $parent.alias!='tacna'">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        <h4 class="text-info"><b>Condiciones</b></h4>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in cargo[0].condiciones">
+                    <td width="40%" style="padding:20px;">{{ item.condicionNombre | getNombrePropio:true }}</td>
+                    <td width="60%">{{ item.condicionDescripcion | getNombrePropio:true }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="icon-container" ng-show="(cargo[0].condiciones | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene condiciones.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mi Perfil -->
+<div id="perfil" class="tab-pane cont">
+    <div class="col-md-12 col-sm-12">
+        <!-- Educacion -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Educación</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'E'} | keylength)>0">
+                    <th class="text-center">Tema</th>
+                    <th class="text-center hidden-xs">Área</th>
+                    <th class="text-center">Institución</th>
+                    <th class="text-center">Nivel</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in GlbUsuario.perfilusuario | filter:{areaTemaTipo:'E'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true}}</td>
+                    <td class="hidden-xs">{{ item.areaNombre | getNombrePropio:true }}</td>
+                    <td>{{ item.educacionInstitucion | getNombrePropio:true }}</td>
+                    <td class="text-center">{{ item.educacionNivel | niveleducacion}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="icon-container" ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'E'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene educación.</span>
+            </div>
+        </div>
+        <!-- Formacion -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Formación</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'F'} | keylength)>0">
+                    <th class="text-center">Tema</th>
+                    <th class="text-center">Área</th>
+                    <th class="text-center">No. Hora</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in GlbUsuario.perfilusuario | filter:{areaTemaTipo:'F'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true}}</td>
+                    <td>{{ item.areaNombre | getNombrePropio:true }}</td>
+                    <td class="text-center">{{ item.formacionTiempo }} h.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="icon-container" ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'F'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene formación.</span>
+            </div>
+        </div>
+        <!-- Experiencia -->
+        <div class="table-responsive">
+            <table class="table width100 table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <h4 class="text-info"><b>Experiencia</b></h4>
+                    </th>
+                </tr>
+                <tr ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'X'} | keylength)>0">
+                    <th class="text-center">Área</th>
+                    <th class="text-center">Empresa</th>
+                    <th class="text-center hidden-xs">Cargo</th>
+                    <th class="text-center">Tiempo</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr ng-repeat="item in GlbUsuario.perfilusuario | filter:{areaTemaTipo:'X'}">
+                    <td style="padding:20px;">{{ item.areaTemaNombre | getNombrePropio:true}}</td>
+                    <td>{{ item.experienciaEmpresa | getNombrePropio:true }}</td>
+                    <td class="hidden-xs">{{ item.experienciaCargo | getNombrePropio:true }}</td>
+                    <td class="text-center" ng-if="item.experienciaTiempo==null && item.experienciaMeses==null"></td>
+                    <td class="text-center" ng-if="item.experienciaTiempo!=null && item.experienciaMeses==null">{{ item.experienciaTiempo }} años</td>
+                    <td class="text-center" ng-if="item.experienciaTiempo==null && item.experienciaMeses!=null">{{ item.experienciaMeses }} meses</td>
+                    <td class="text-center" ng-if="item.experienciaTiempo!=null && item.experienciaMeses!=null">{{ item.experienciaTiempo }} años, {{ item.experienciaMeses }} meses</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="icon-container" ng-show="(GlbUsuario.perfilusuario | filter:{areaTemaTipo:'X'} | keylength)==0">
+                <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene experiencia.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- organigrama -->
+<div id="orgdiagram" class="tab-pane" style=" overflow: hidden; border-style: dotted; border-width: 1px;width: 100%;height: 700px">
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<!--<widget-calendario class="col-md-3"></widget-calendario>-->
+
+</div>
+
+</div>

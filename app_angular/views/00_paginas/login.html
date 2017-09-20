@@ -1,0 +1,141 @@
+<html ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <title>Delta - Admin</title>
+    <link rel="stylesheet" href="./js/00_assets/css/style_login.css" type="text/css">
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap core CSS -->
+
+    <link rel="stylesheet" type="text/css" href="./js/00_assets/js/jquery.niftymodals/css/component.css" />
+    <link rel="stylesheet" type="text/css" href="./js/00_assets/js/intro.js/introjs.css" />
+    <link rel="stylesheet" type="text/css" href="./js/00_assets/js/jquery.gritter/css/jquery.gritter.css" />
+    <link rel="stylesheet" type="text/css" href="./js/00_assets/js/jquery.datatables/bootstrap-adapter/css/datatables.css" />
+
+    <!-- Genera las variables de entorno -->
+    <script type="text/javascript">
+
+        // variables globales
+        var varURL = "";
+        var varURLApi = "";
+    </script>
+    <script src="./js/00_assets/js/jquery.js"></script>
+    <script src="./js/00_assets/js/behaviour/voice-commands.js"></script>
+    <script src="./js/00_assets/js/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.flot/jquery.flot.pie.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.flot/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.flot/jquery.flot.labels.js"></script>
+
+    <script type="text/javascript" src="./js/00_assets/js/jquery.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/behaviour/general.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.easypiechart/jquery.easy-pie-chart.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.nestable/jquery.nestable.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/bootstrap.switch/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.select2/select2.min.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/skycons/skycons.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/bootstrap.slider/js/bootstrap-slider.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/jquery.niftymodals/js/jquery.modalEffects.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/intro.js/intro.js"></script>
+    <script type="text/javascript" src="./js/00_assets/js/funciones.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+
+    <script src="./js/00_assets/js/login.js"></script>
+</head>
+
+<body bgcolor="#ffffff" topmargin="0" marginheight="0" leftmargin="0" marginwidth="0" ng-view>
+<form ng-submit="login()">
+    <input type="hidden" id="idAplication" name="idAplication" value="admin">
+
+    <div id="loading" style="position: fixed; z-index:99999; top: 50%; left: 50%; transform: translate(-50%, -50%); display:none;">
+        <img src="./js/00_assets/images/ajax-loader.gif">
+    </div>
+
+    <table cellpadding="0" cellspacing="0" width="100%" height="100%" border="0">
+
+        <tr>
+            <td colspan="2" rowspan="2" valign="bottom">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td><img src="./js/00_assets/images/gr_login.jpg" width="549" height="600" border="0" alt=""></td>
+                    </tr>
+                    <!-- <tr>
+                        <td><img src="./js/00_assets/images/gr_login_01.jpg" width="549" height="198" border="0" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td><img src="./js/00_assets/images/gr_login_02.jpg" width="549" height="182" border="0" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td><img src="./js/00_assets/images/gr_login_03.jpg" width="549" height="220" border="0" alt=""></td>
+                    </tr> -->
+                </table>
+            </td>
+            <td align="center" valign="middle" height="100%"><br><br><br><img src="./js/00_assets/images/gr_login_logo.jpg" width="303" height="134" border="0" alt=""></td>
+            <td bgcolor="#80bd01" rowspan="2"><img src="./js/00_assets/images/gr_blank.gif" width="20" height="1" border="0" alt=""></td>
+        </tr>
+        <tr>
+            <td valign="bottom" align="center" width="100%">
+                <table cellpadding="0" cellspacing="0" border="0" height="182">
+                    <tr>
+                        <td height="100%" style="color:757578;font-size:18px;" align="center" width="340">Bienvenido al nuevo sistema de CLIPPING en linea de BOA Comunicaciones<br><br><br></td>
+                    </tr>
+                    <tr>
+                        <td height="19" valign="bottom" align="center"><img src="./js/00_assets/images/gr_login_04.jpg" width="340" height="19" border="0" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td align="center" width="340" bgcolor="#dededf">
+                            <table cellpadding="0" cellspacing="0" border="0" width="250" height="220" bgcolor="#dededf">
+                                <tr>
+                                    <td style="color:757578;" align="center" valign="top">Por favor, ingresa tu usuario y contraseña para que puedas acceder al contenido</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold;">Usuario:</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="idUsuario" name="idUsuario" value="" size="37" maxlength="30" class="textbox" required="required" ng-model="username"></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold;">Contrase&ntilde;a:</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="password" id="idPassword" name="idPassword" value="" size="37" maxlength="30" class="textbox" required="required"></td>
+                                </tr>
+                                <tr>
+                                    <td align="right" valign="bottom"><button>Ingresar</button></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td height="120" width="200" align="center" valign="bottom" bgcolor="#295133" style="color:#fafafa;padding-bottom:5px;font-size:11px;">BOA Estrategia y Comunicación<br>&copy; Copyright - 2015</td>
+            <td height="120" bgcolor="#767577"><img src="./js/00_assets/images/gr_blank.gif" width="38" height="1" border="0" alt=""></td>
+            <td height="120" bgcolor="#767577" colspan="2"><img src="./js/00_assets/images/gr_blank.gif" width="38" height="1" border="0" alt=""></td>
+        </tr>
+
+    </table>
+</form>
+
+<script src="js/01_core/lib/underscore-min.js"></script>
+<script src="js/01_core/lib/angular.min.js"></script>
+<script src="js/01_core/lib/angular-route.min.js"></script>
+<script src="js/01_core/app.js"></script>
+<script src="js/01_core/controllers.js"></script>
+<script src="js/01_core/directives.js"></script>
+<script src="js/01_core/filters.js"></script>
+<script src="js/01_core/services.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+[
+  {"carrera":"comex","pertinencia":90},
+  {"carrera":"comex","academia":95},
+  {"carrera":"comex","curricular":80},
+  {"carrera":"comex","ambiente":90},
+  {"carrera":"comex","estudiantes":90},
+  {"carrera":"finanzas","pertinencia":90},
+  {"carrera":"finanzas","academia":70},
+  {"carrera":"finanzas","curricular":90},
+  {"carrera":"finanzas","ambiente":80},
+  {"carrera":"finanzas","estudiantes":85},
+  {"carrera":"marketing","pertinencia":70},
+  {"carrera":"marketing","academia":70},
+  {"carrera":"marketing","curricular":60},
+  {"carrera":"marketing","ambiente":80},
+  {"carrera":"marketing","estudiantes":80},
+  {"carrera":"empresas","pertinencia":60},
+  {"carrera":"empresas","academia":70},
+  {"carrera":"empresas","curricular":75},
+  {"carrera":"empresas","ambiente":80},
+  {"carrera":"empresas","estudiantes":80}
+
+]

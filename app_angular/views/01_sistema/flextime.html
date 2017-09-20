@@ -1,0 +1,379 @@
+<div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="info-block panel panel-default">
+
+            <div class="panel-body">
+                <div class="tab-container">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="flex.tipo=='M'?'active':''" ng-show="flex.tipo=='M'"><a href="#datos" data-toggle="tab" aria-expanded="false">Nueva Solicitud Mensual</a></li>
+                        <li ng-class="flex.tipo=='A'?'active':''" ng-show="flex.tipo=='A'"><a href="#anual" data-toggle="tab" aria-expanded="false">Nueva Solicitud Anual</a></li>
+                        <li ng-class="flex.tipo==undefined?'active':''"><a href="#contacto" data-toggle="tab" aria-expanded="false">Aprobaciones</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="datos" class="tab-pane cont" ng-class="flex.tipo=='M'?'active':''" ng-if="flex.tipo=='M'">
+
+                            <div class="col-md-12 col-sm-12">
+                                <!-- Instrucciones -->
+                                <h4 class="text-warning">Instrucciones</h4>
+
+                                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                    <div class="icon"><span class="s7-info"></span></div>
+                                    <div class="message">
+                                        <strong>1. </strong>El número de días a solicitar no deberá ser superior al establecido como saldo disponible.<br><strong>2. </strong>Las solicitudes de flextime serán aprobadas por el Jefe Inmediato.<br><strong>3. </strong>Las
+                                        solicitudes de flextime deberán ser realizadas con 15 días de anticipación.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form ng-submit="solicitar()">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Apellidos y Nombres</label>
+                                        <input type="text" placeholder="" ng-model="flex.nombres" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Ingreso a la Empresa</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" datetime="yyyy-MM-dd" ng-model="flex.usuarioFechaIngreso" readonly="readonly" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="" ng-model="flex.departamentoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" ng-model="flex.cargoNombre" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <div ng-repeat-start="item in arrayflex track by $index" class="col-md-5 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha {{ ($index+1) }}</label>
+                                        <div ng-show="item.solicitudFlextimeEstado!='P' && item.solicitudFlextimeEstado!='A'" data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker change-month="0" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" ng-model="item.solicitudFlextimeFechaInicio" ng-disabled="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" class="form-control">
+                                            <span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+
+                                        <div ng-show="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" data-min-view="2" data-date-format="yyyy-mm-dd" change-month="0" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="{{ item.solicitudFlextimeFechaInicio | limitTo:10 }}" readonly="readonly" class="form-control vacacion">
+                                            <span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Tipo  </label>
+                                        <select class="form-control" ng-model="item.solicitudFlextimeMensualTipo" ng-disabled="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'">
+                                            <option value=1>Flex Time 8:00 a 11:00</option>
+                                            <option value=2>Flex Time 14:00 a 17:00</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div ng-repeat-end class="col-md-3 col-sm-12 text-right">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <button ng-show="item.solicitudFlextimeEstado!='P' && item.solicitudFlextimeEstado!='A'" type="submit" class="form-control btn btn-space btn-primary" ng-click="solicitar(item)">Solicitar</button>
+
+                                        <p ng-show="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" class="{{ (item.solicitudFlextimeEstado=='A'?'text-success':'text-danger') }} pull-left" style="margin: 40px;">{{ (item.solicitudFlextimeEstado=='A'?'Aprobada':'Pendiente') }}</p>
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                            <!--
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                        </div>
+
+                        <div id="anual" class="tab-pane cont" ng-class="flex.tipo=='A'?'active':''" ng-if="flex.tipo=='A'">
+
+                            <div class="col-md-12 col-sm-12">
+                                <!-- Instrucciones -->
+                                <h4 class="text-warning">Instrucciones</h4>
+
+                                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                    <div class="icon"><span class="s7-info"></span></div>
+                                    <div class="message">
+                                        <strong>1. </strong>El número de días a solicitar no deberá ser superior al establecido como saldo disponible.<br><strong>2. </strong>Las solicitudes de flextime serán aprobadas por el Jefe Inmediato.<br><strong>3. </strong>Las
+                                        solicitudes de vacaciones deberán ser realizadas con 15 días de anticipación.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form>
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Apellidos y Nombres</label>
+                                        <input type="text" placeholder="" ng-model="flex.nombres" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Ingreso a la Empresa</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" datetime="yyyy-MM-dd" ng-model="flex.usuarioFechaIngreso" readonly="readonly" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="" ng-model="flex.departamentoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" ng-model="flex.cargoNombre" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <div ng-repeat-start="item in arrayflex" class="col-md-5 col-sm-12">
+
+                                    <div class="form-group">
+                                        <label>Fecha {{ ($index+1) }}</label>
+                                        <div ng-show="item.solicitudFlextimeEstado!='P' && item.solicitudFlextimeEstado!='A'" data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker change-month="0" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" ng-model="item.solicitudFlextimeFechaInicio" ng-disabled="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" class="form-control">
+                                            <span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+
+                                        <div ng-show="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" data-min-view="2" data-date-format="yyyy-mm-dd" change-month="0" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="{{ item.solicitudFlextimeFechaInicio | limitTo:10 }}" readonly="readonly" class="form-control vacacion">
+                                            <span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-repeat-end class="col-md-3 col-sm-12 text-right">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <button ng-show="item.solicitudFlextimeEstado!='P' && item.solicitudFlextimeEstado!='A'" type="submit" class="form-control btn btn-space btn-primary" ng-click="solicitar(item)">Solicitar</button>
+
+                                        <p ng-show="item.solicitudFlextimeEstado=='P' || item.solicitudFlextimeEstado=='A'" class="{{ (item.solicitudFlextimeEstado=='A'?'text-success':'text-danger') }} pull-left" style="margin: 40px;">{{ (item.solicitudFlextimeEstado=='A'?'Aprobada':'Pendiente') }}</p>
+
+                                    </div>
+                                </div>
+                            </form>
+
+
+
+                            <!--
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="flex.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                        </div>
+
+
+                        <div id="contacto" class="tab-pane" ng-class="flex.tipo==undefined?'active':''">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" placeholder="" class="form-control" ng-model="filtro.nombre">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    <select class="form-control" ng-model="filtro.estado">
+                                            <option ng-repeat="item in options" value="{{ item.value }}">{{ item.name }}</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Inicio</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechainicio" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Fin</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechafin" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 spacer text-center">
+                                <button type="button" class="btn btn-space btn-primary" ng-click="buscar()">Buscar</button>
+                                <button type="button" class="btn btn-space btn-primary">Limpiar</button>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table table-striped table-fw-widget table-hover" ng-show="(listaaprobar | filter:{solicitudFlextimeEstado:estado} | keylength)>0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Empleado</th>
+                                            <th class="text-center">Fecha</th>
+                                            <th class="text-center">Tipo</th>
+
+                                            <th class="text-center">{{ (estado=='P'?'Acción':'Estado') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-border-x">
+                                        <tr ng-repeat="item in listaaprobar" ng-show="item.solicitudFlextimeEstado==estado">
+                                            <td class="user-avatar" nowrap> <img ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.sex_usuario ) }}?v={{rand}}">{{ item.usuarioNombreCompuesto }}</td>
+                                            <td align="center" nowrap>{{ item.solicitudFlextimeFechaInicio | limitTo:10 }}</td>
+                                            <td align="center" nowrap>{{ (item.solicitudFlextimeTipo=='M'?'Mensual':'Anual') }} <br> <span class="text-info">{{ (item.solicitudFlextimeMensualTipo==1?'(8:00 a 11:00)':(item.solicitudFlextimeMensualTipo==2?'(14:00 a 17:00)':'')) }}</span></td>
+
+                                            <td align="center">
+                                                <div class="input-group  col-md-12" ng-show="estado=='P'">
+                                                    <input type="text" class="form-control" ng-model="item.solicitudFlextimeObservacion" placeholder="Descripción">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a ng-click="AccionSolicitud(item,'A')">Aprobar</a></li>
+                                                            <li><a ng-click="AccionSolicitud(item,'N')">Postergar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <p ng-show="estado!='P'" class="{{ (estado=='A'?'text-success':'text-danger') }}">{{ (estado=='A'?'Aprobada':'Postergada') }}</p>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                <div class="icon-container" ng-show="(listaaprobar | filter:{solicitudFlextimeEstado:estado} | keylength)==0">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene aprobaciones.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- widget -->
+    <widget-calendario class="col-lg-3 hidden-md hidden-xs" data="{{ calendario }}"></widget-calendario>
+
+    <div id="mod-info" tabindex="-1" role="dialog" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close"><i class="icon s7-close"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <h4>Su solicitud ha sido creada con éxito!</h4>
+                    </div>
+                    <div class="text-center">
+                        <a ng-click="descargarPdfVacacion()" style="cursor: pointer" class="i-circle text-info"><i class="icon s7-download"></i></a>
+                        <p>Descargar solicitud</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-info">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,87 @@
+<style>
+    .bp-photo-frame {
+        top: 30px !important;
+        left: 10px !important;
+    }
+    
+    div[name=email],
+    div[name=description] {
+        padding-left: 15px;
+        width: 150px !important;
+    }
+    
+    div.bp-title-frame {
+        height: 23px !important;
+    }
+</style>
+
+<div class="user-profile">
+    <!--<header-user dashboard-item="P"></header-user>-->
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="info-block panel panel-default">
+                <div class="panel-body">
+                    <div class="tab-container">
+
+                        <div class="tab-content">
+
+                            <div id="beneficio" class="tab-pane cont active">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="table-responsive" ng-show="(GlbUsuario.beneficios | keylength)>0">
+                                        <table class="table width100 table-striped table-fw-widget table-hover">
+                                            <tbody class="no-border-x">
+                                                <tr ng-repeat="item in GlbUsuario.beneficios">
+                                                    <td width="25%" class="text-center hidden-xs">
+                                                        <h1 class="text-info">
+                                                            <span class="{{ (item.tipoBeneficioImagen=='I')?item.tipoBeneficioIcono:'' }}" ng-style="(item.tipoBeneficioImagen=='G') ? {'display': 'none'} : {}"></span>
+                                                            <img src="{{ item.tipoBeneficioArchivo + '?v=' + $parent.rand }}" ng-style="(item.tipoBeneficioImagen=='I') ? {'display': 'none'} : {}" />
+                                                        </h1>
+                                                    </td>
+                                                    <td width="25%" class="text-center">
+                                                        <span class="text-info">{{ item.beneficioNombre }}</span><br>
+                                                        <br>
+                                                        <!-- <hm-read hmtext="{{ item.tipoBeneficioDescripcion }}" hmlimit="100" hm-more-text="" hmfulltext="true" hm-less-text="read less"></hm-read> -->
+                                                        <p ng-bind-html="item.tipoBeneficioDescripcion | sanitize"></p>
+                                                        <br>
+                                                    </td>
+                                                    <td width="15%" class="number text-center">{{ (item.beneficioValor > 0)?item.beneficioValor + ' $':'' }}</td>
+                                                    <td width="35%" class="text-center">
+                                                        <div class="spacer text-center">
+                                                            <nav>
+                                                                <ul class="pagination pagination-lg" style="margin: 0px 0px;">
+                                                                    <li ng-repeat="item_1 in item.archivos">
+                                                                        <a>
+                                                                            <span ng-click="openFile(item_1.archivoBeneficioArchivo)" class="iconmoon" ng-class="(item_1.archivoBeneficioArchivo | iconoarchivo:'i')" style="font-size: 15pt;color: {{ (item_1.archivoBeneficioArchivo | iconoarchivo:'c') }}" tooltips tooltip-side="bottom"
+                                                                                tooltip-template="{{ item_1.archivoBeneficioNombre }}"></span>
+                                                                        </a>
+
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="icon-container" ng-show="(GlbUsuario.beneficios | keylength)==0">
+                                        <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene beneficios.</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- widget -->
+        <widget-calendario class="col-lg-3 hidden-xs" data="{{ calendario }}"></widget-calendario>
+
+    </div>
+
+</div>

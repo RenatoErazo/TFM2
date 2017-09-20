@@ -1,0 +1,348 @@
+<div class="md-modal colored-header custom-width md-effect-9" id="modal-tab-not" style="width:90%;max-width:100%;height: 100vh;">
+    <div class="md-content">
+        <div class="modal-header">
+            <h3>Informe por Evaluaciones</h3>
+            <button type="button" class="close md-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body form" style="overflow: auto">
+
+            <div class="list-group tickets" id="header">
+                <div class="list-group-item" href="#">
+                    <div class="col-sm-4 col-md-4">
+                        <img class="avatar" id="avatar" style="width: 55px"
+                             ng-src="{{evaluado.usua_foto}}?v={{rand}}"/>
+                        <h4 class="name" id="nombre" style="margin-top: 7px;">{{evaluado.usua_nombre}} {{evaluado.usua_apellido}}</h4>
+                        <h4 id="departamento">{{evaluado.depa_nombre}}</h4>
+                        <h4 id="evaluacion">{{evaluado.eval_fechainicio}}</h4>
+                    </div>
+                    <div class="col-sm-8 col-md-8" style="top:16px">
+                        <span class="pull-right">
+                            <div class="fact-data text-right">
+                                <h3 id="resultado">Nivel de Habilidad: {{evaluado.resultado}}</h3>
+                                <h4 id="promedio">{{evaluado.prom_total}}/4</h4>
+                            </div>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <style>
+                .tableInforme
+                {
+
+                }
+
+                .tableInforme tr td,th
+                {
+                    text-align: center;
+                    font-weight: normal;
+                    padding: 5px;
+                }
+
+                .tableInforme tr td:first-child
+                {
+                    background-color: #C9C3BA;
+                }
+
+                .tableInforme tr td:last-child
+                {
+                    background-color: #FFF7E1;
+                }
+
+
+                .tableInforme tr:first-child
+                {
+                    background-color: #B93E40;
+                }
+
+                .tableInforme tr:last-child td:first-child
+                {
+                    background-color: white;
+                }
+
+                .tableInforme tr:last-child td:last-child
+                {
+                    background-color: #FDEAC7;
+                }
+
+            </style>
+
+            <div class="form-group" style="overflow: scroll;height: 50vh" id="fromHTMLtestdiv">
+
+                <div class="col-md-6" ng-hide="listaInforme | filter:{codigo_relacion:0,tipo_competencia:5} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Competencias Pedagógicas</div>
+                    <table id="table_1" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white">
+                                Valor
+                            </th>
+                        </tr>
+                        <tr ng-repeat="informe in listaInforme | filter:{codigo_relacion:0,tipo_competencia:5} | orderBy:'orden'">
+                            <td>
+                                {{informe.nombre_competencia}}
+                            </td>
+                            <td>
+                                {{informe.valor}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Promedio
+                            </td>
+                            <td>
+                                {{evaluado.prom_pedagogicos}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6" ng-hide="listaInforme | filter:{codigo_relacion:0,tipo_competencia:5} | isEmpty">
+                    <div id="chartdiv" style="width:800px; height:400px;"></div>
+                </div>
+                <div class="col-md-6" ng-hide="listaInforme | filter:{codigo_relacion:0,tipo_competencia:6} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Valores Organizacionales</div>
+                    <table id="table_2" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white">
+                                Valor
+                            </th>
+                        </tr>
+                        <tr ng-repeat="informe in listaInforme | filter:{codigo_relacion:0,tipo_competencia:6}  | orderBy:'orden'">
+                            <td>
+                                {{informe.nombre_competencia}}
+                            </td>
+                            <td>
+                                {{informe.valor}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Promedio
+                            </td>
+                            <td>
+                                {{evaluado.prom_valores}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6" ng-hide="listaInforme | filter:{codigo_relacion:0,tipo_competencia:6} | isEmpty">
+                    <div id="chartdiv2" class="chart" style="width:800px; height:400px;"></div>
+                </div>
+
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:5} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Ranking por Relación - Competencias Pedagógicas</div>
+
+                    <table id="table_3" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white" ng-repeat="item in listaInforme | filter:{tipo_competencia:5} | unique:'nombre_relacion' | orderBy:'-codigo_relacion'">
+                                {{item.nombre_relacion}}
+                            </th>
+
+                        </tr>
+                        <tr ng-repeat="(key,value) in listaInforme | filter:{tipo_competencia:5} | groupBy: 'nombre_competencia' | toArray:true | orderBy:'orden'">
+                            <td style="background-color: #C9C3BA;">
+                                {{value[0].nombre_competencia}}
+                            </td>
+                            <td ng-repeat="item in value | orderBy:'-codigo_relacion'">
+                                {{item.valor | formatValor}}
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:5} | isEmpty">
+                    <div id="chartdiv3" style="margin:20px 0 20px 0;width:100%; height:400px;"></div>
+                </div>
+
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:6} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Ranking por Relación - Competencias Valores Organizacionales</div>
+                    <!--<table id="table_4" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white" ng-repeat="item in listaInforme | filter:{tipo_competencia:6} | unique:'nombre_relacion'">
+                                {{item.nombre_relacion}}
+                            </th>
+
+                        </tr>
+                        <tr ng-repeat="(key,value) in listaInforme | filter:{tipo_competencia:6} | groupBy: 'nombre_competencia' | toArray:true | orderBy:'orden'">
+                            <td>
+                                {{value[key].nombre_competencia}}
+                            </td>
+                            <td ng-repeat="item in value | orderBy:'-codigo_relacion'">
+                                {{item.valor | formatValor}}
+                            </td>
+                        </tr>
+                    </table>-->
+
+                    <table id="table_4" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white" ng-repeat="item in listaInforme | filter:{tipo_competencia:6} | unique:'nombre_relacion' | orderBy:'-codigo_relacion'">
+                                {{item.nombre_relacion}}
+                            </th>
+
+                        </tr>
+                        <tr ng-repeat="(key,value) in listaInforme | filter:{tipo_competencia:6} | groupBy: 'nombre_competencia' | toArray:true | orderBy:'orden'">
+                            <td style="background-color: #C9C3BA;">
+                                {{value[0].nombre_competencia}}
+                            </td>
+                            <td ng-repeat="item in value | orderBy:'-codigo_relacion'">
+                                {{item.valor | formatValor}}
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:6} | isEmpty">
+                    <div id="chartdiv4" style="margin:20px 0 20px 0;width:100%; height:400px;"></div>
+                </div>
+
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:5} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Ranking por Relación Conductas - Competencias Pedagógicas</div>
+                    <table id="table_5" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white" ng-repeat="item in listaInforme | filter:{tipo_competencia:5} | unique:'nombre_relacion' | orderBy:'-codigo_relacion'">
+                                {{item.nombre_relacion}}
+                            </th>
+
+                        </tr>
+                        <tr ng-repeat-start="(key,value) in listaInforme | filter:{tipo_competencia:5} | groupBy: 'nombre_competencia' | toArray:true | orderBy:'orden'">
+                            <td style="background-color: #C9C3BA;">
+                                {{value[0].nombre_competencia}}
+                            </td>
+                            <td ng-repeat="item in value | orderBy:'-codigo_relacion'">
+                                {{item.valor | formatValor}}
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-repeat="item_1 in value[0].conductas">
+                            <td style="background-color: white;">
+                                {{item_1.cond_nombre}}
+                            </td>
+
+                            <td ng-repeat="item_2 in value | orderBy:'-codigo_relacion'">
+
+                                {{(item_2.conductas | filter:{cond_codigo:item_1.cond_codigo})[0].valor | formatValor}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-12" ng-hide="listaInforme | filter:{tipo_competencia:6} | isEmpty">
+                    <div class="text-center" style="color:#4C7196;font-weight: bold;font-size: 12pt;margin: 8px">Ranking por Relación Conductas - Competencias Valores Organizacionales</div>
+                    <table id="table_6" class="tableInforme">
+
+                        <tr>
+                            <th align="center" style="color: white">
+                                Competencia
+                            </th>
+                            <th align="center" style="color: white" ng-repeat="item in listaInforme | filter:{tipo_competencia:6} | unique:'nombre_relacion' | orderBy:'-codigo_relacion'">
+                                {{item.nombre_relacion}}
+                            </th>
+
+                        </tr>
+                        <tr ng-repeat-start="(key,value) in listaInforme | filter:{tipo_competencia:6} | groupBy: 'nombre_competencia' | toArray:true | orderBy:'orden'">
+                            <td style="background-color: #C9C3BA;">
+                                {{value[0].nombre_competencia}}
+                            </td>
+                            <td ng-repeat="item in value | orderBy:'-codigo_relacion'">
+                                {{item.valor | formatValor}}
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-repeat="item_1 in value[0].conductas">
+                            <td style="background-color: white;">
+                                {{item_1.cond_nombre}}
+                            </td>
+
+                            <td ng-repeat="item_2 in value | orderBy:'-codigo_relacion'">
+
+                                {{(item_2.conductas | filter:{cond_codigo:item_1.cond_codigo})[0].valor | formatValor}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-hide="evaluado.comentarios | isEmpty" id="comentario" style="display:inline-block;margin-top: 30px" >
+                    <h3 class="text-primary">Comentario Autoevaluación</h3><BR><BR>
+
+                    {{evaluado.comentarios}}<br>
+                </div>
+
+                <div ng-hide="conductaPedagogicas | lessThan: media | orderBy:'valor' | limitTo:5 | isEmpty" style="display:inline-block;margin-top: 30px" id="descPeda">
+
+                    <h3 class="text-primary">Competencias Pedagógicas</h3>
+                    <br/><br/>
+                    <h3 class="hthin">Fortalezas</h3>
+                    <br/><br/>
+                    <ul>
+                        <div>
+
+                            <li  ng-repeat="item in conductaPedagogicas | greaterThan : media | orderBy:'-valor' | limitTo:5">
+                                {{item.cond_nombre}}
+                            </li>
+                        </div>
+                    </ul>
+                    <h3 class="hthin">Oportunidades de desarrollo</h3>
+                    <br/><br/>
+                    <ul>
+                        <div>
+                            <li  ng-repeat="item in conductaPedagogicas | lessThan : media | orderBy:'valor' | limitTo:5">
+                                {{item.cond_nombre}}
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+
+                <div ng-hide="conductaValores | greaterThan : media | orderBy:'-valor' | limitTo:5 | isEmpty" style="display:inline-block;margin-top: 30px" id="descValo">
+                    <h3 class="text-primary">Valores Organizacionales</h3>
+                    <br/><br/>
+                    <h3 class="hthin">Fortalezas</h3>
+                    <br/><br/>
+                    <ul>
+                        <div>
+                            <li  ng-repeat="item in conductaValores | greaterThan : media | orderBy:'-valor' | limitTo:5">
+                                {{item.cond_nombre}}
+                            </li>
+                        </div>
+                    </ul>
+                    <h3 class="hthin">Oportunidades de desarrollo</h3>
+                    <br/><br/>
+                    <ul>
+                        <div>
+                            <li  ng-repeat="item in conductaValores | lessThan : media | orderBy:'valor' | limitTo:5">
+                                {{item.cond_nombre}}
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-flat" ng-click="exportarPdf()">Exportar PDF</button>
+            <button type="button" class="btn btn-primary btn-flat md-close" data-dismiss="modal">Salir</button>
+        </div>
+    </div>
+</div>
+
+<div class="md-overlay"></div>

@@ -1,0 +1,577 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="info-block panel panel-default">
+            <div class="panel-body">
+                <div class="tab-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#datosrol" data-toggle="tab" aria-expanded="false">Rol de Pagos</a></li>
+                        <li class=""><a href="#datosutil" data-toggle="tab" ng-click="consultaUtilidad()" aria-expanded="true">Utilidades</a></li>
+                        <li class="" ng-show="$parent.config.clienteCodigo==9 || $parent.config.clienteCodigo==7"><a href="#datosbene" data-toggle="tab" ng-click="consultaBeneficio()" aria-expanded="true">Beneficios</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Rol de pagos -->
+                        <div id="datosrol" class="tab-pane cont active">
+                            <div class="col-md-9">
+                                <!-- Instrucciones -->
+                                <div class="col-md-12 col-sm-12">
+                                    <h4 class="text-warning">Instrucciones</h4>
+
+                                    <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                        <div class="icon"><span class="s7-info"></span></div>
+                                        <div class="message">
+                                            <strong>1. </strong>Seleccione el Año del Período que desee ver su Rol de Pagos.<br>
+                                            <strong>2. </strong>Seleccione un Mes para cargar su Rol de Pagos.<br>
+                                            <strong>3. </strong>Descarge el PDF de su Rol de Pagos si es necesario.<br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Campos -->
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Empresa</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.empresaNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.departamentoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.cargoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cédula</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.usuarioCedula | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Período</label>
+                                        <input type="text" placeholder="" value="{{ rol.mes | nombremes }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-show="datarol.diasTrabajados && datarol.diasTrabajados!=0">
+                                    <div class="form-group">
+                                        <label>Días Trabajados</label>
+                                        <input type="text" placeholder="" value="{{ datarol.diasTrabajados }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <!-- datos bancarios -->
+                                <div class="col-md-6 col-sm-12" ng-show="datarol.datosBancarios=='S'">
+                                    <div class="form-group">
+                                        <label>Banco</label>
+                                        <input type="text" placeholder="" value="{{ datarol.nombreBanco }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-show="datarol.datosBancarios=='S'">
+                                    <div class="form-group">
+                                        <label>Tipo de Cuenta</label>
+                                        <input type="text" placeholder="" value="{{ datarol.tipoCuenta }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-show="datarol.datosBancarios=='S'">
+                                    <div class="form-group">
+                                        <label>Número de Cuenta</label>
+                                        <input type="text" placeholder="" value="{{ datarol.numeroCuenta }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-show="datarol.datosBancarios=='S'">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <input type="text" placeholder="" value="" readonly="readonly" class="form-control" style="visibility: hidden;"></div>
+                                </div>
+
+                                <form ng-submit="confirmaRol()">
+                                    <div class="col-md-6 col-sm-12" ng-if="datarol.aprobacionRolpago=='S'">
+                                        <div class="form-group">
+                                            <label>Conforme</label>
+                                            <select class="form-control" required ng-model="formRol.aprobacionUsuario">
+                                                <option value="">...</option>
+                                                <option value="S">Si</option>
+                                                <option value="N">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-12" ng-if="datarol.aprobacionRolpago=='S' && formRol.aprobacionUsuario=='N'">
+                                        <div class="form-group">
+                                            <label>Observación</label>
+                                            <input type="text" placeholder="" class="form-control" ng-model="formRol.observacionUsuario" ng-required="formRol.aprobacionUsuario=='N'">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-sm-12 text-left" ng-if="datarol.aprobacionRolpago=='S' && (datarol.aprobacionUsuario=='N' || datarol.aprobacionUsuario=='')">
+                                        <button type="submit" class="btn btn-space btn-primary">Enviar Rol</button>
+                                    </div>
+                                </form>
+
+
+                                <!-- Tabla detalle -->
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="col-md-6 col-sm-12" ng-show="datarol.ingresos">
+                                        <table class="table table-striped table-fw-widget table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2" class="text-success text-center">INGRESOS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="no-border-x">
+                                                <tr ng-repeat="item in datarol.ingresos">
+                                                    <td>{{ item.ingresoNombre }}</td>
+                                                    <td class="number">{{ item.ingresoValor }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="text-success"><b>Total</b></span></td>
+                                                    <td class="number"><span class="text-success"><b>{{ datarol.totalIngresos}}</b></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12" ng-show="datarol.egresos">
+                                        <table class="table table-striped table-fw-widget table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2" class="text-danger text-center">EGRESOS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="no-border-x">
+                                                <tr ng-repeat="item in datarol.egresos">
+                                                    <td>{{ item.egresoNombre }}</td>
+                                                    <td class="number">{{ item.egresoValor }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="text-danger"><b>Total</b></span></td>
+                                                    <td class="number"><span class="text-danger"><b>{{ datarol.totalEgresos }}</b></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Totales -->
+                                <div class="col-md-12 col-sm-12" ng-show="datarol.totalIngresos">
+                                    <div role="alert" class="alert alert-success alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon"><span class="s7-cash"></span></div>
+                                        <div class="message alert alert-success alert-dismissible">
+                                            <h3 style="color:#ffffff;"><strong>Líquido a Recibir</strong> {{ (datarol.totalIngresos - datarol.totalEgresos).toFixed(2) }}</h3>
+                                            <!--Setecientos cuarenta y tres dolares 00/00-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Si aplica PDF -->
+                                <div class="col-md-12 col-sm-12" ng-show="datarol.urlRol">
+                                    <div role="alert" class="alert alert-danger alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon" style="cursor: pointer" ng-click="descargarPdfRol()"><span class="s7-download"></span></div>
+                                        <div class="message">
+                                            <strong>Período</strong> {{ rol.mes | nombremes }}, {{ rol.anio }}<br> Su Rol de Pago se genero con exito.<br>
+                                            <strong class="text-danger" style="cursor: pointer" ng-click="descargarPdfRol()">Descargar PDF</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="text-info">Año</label>
+                                    <select class="form-control" ng-model="rol.anio" ng-change="consultaRol()">
+                                        <option value="2018">2018</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2014">2014</option>
+                                        <option value="2013">2013</option>
+                                        <option value="2012">2012</option>
+                                    </select>
+
+                                    <label class="text-info" ng-show="$parent.config.clienteCodigo==4">Período</label>
+                                    <select class="form-control" ng-show="$parent.config.clienteCodigo==4" ng-model="rol.periodo" ng-change="consultaRol()">
+                                        <option value=2>Mensual</option>
+                                        <option value=1>Anticipo</option>
+                                    </select>
+
+                                    <label class="text-warning">&nbsp;</label>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="12" ng-model="rol.mes" id="rad1" ng-change="consultaRol()">
+                                        <label for="rad1">Diciembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="11" ng-model="rol.mes" id="rad2" ng-change="consultaRol()">
+                                        <label for="rad2">Noviembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="10" ng-model="rol.mes" id="rad3" ng-change="consultaRol()">
+                                        <label for="rad3">Octubre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="9" ng-model="rol.mes" id="rad4" ng-change="consultaRol()">
+                                        <label for="rad4">Septiembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="8" ng-model="rol.mes" id="rad5" ng-change="consultaRol()">
+                                        <label for="rad5">Agosto</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="7" ng-model="rol.mes" id="rad6" ng-change="consultaRol()">
+                                        <label for="rad6">Julio</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="6" ng-model="rol.mes" id="rad7" ng-change="consultaRol()">
+                                        <label for="rad7">Junio</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="5" ng-model="rol.mes" id="rad8" ng-change="consultaRol()">
+                                        <label for="rad8">Mayo</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="4" ng-model="rol.mes" id="rad9" ng-change="consultaRol()">
+                                        <label for="rad9">Abril</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="3" ng-model="rol.mes" id="rad10" ng-change="consultaRol()">
+                                        <label for="rad10">Marzo</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="2" ng-model="rol.mes" id="rad11" ng-change="consultaRol()">
+                                        <label for="rad11">Febrero</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad1" value="1" ng-model="rol.mes" id="rad12" ng-change="consultaRol()">
+                                        <label for="rad12">Enero</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- utilidaoes -->
+                        <div id="datosutil" class="tab-pane cont">
+                            <div class="col-md-9">
+                                <!-- Instrucciones -->
+                                <div class="col-md-12 col-sm-12">
+                                    <h4 class="text-warning"><b>Instrucciones</b></h4>
+
+                                    <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                        <div class="icon"><span class="s7-attention"></span></div>
+                                        <div class="message">
+                                            <strong>1. </strong>Seleccione el Año del Período que desee ver sus Utilidades.<br>
+                                            <strong>2. </strong>Descarge el PDF de sus Utilidades si es necesario.<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Campos -->
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Empresa</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.empresaNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.departamentoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.cargoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cédula</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.usuarioCedula | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <!-- Tabla detalle -->
+                                <div class="col-md-12 col-sm-12" ng-show="datautilidad">
+                                    <table class="table table-striped table-fw-widget table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" class="text-success text-center">UTILIDADES</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="no-border-x">
+                                            <tr ng-show="datautilidad[0].numeroCargaUtilidad && datautilidad[0].numeroCargaUtilidad!=0">
+                                                <td>Número Cargas Familiares</td>
+                                                <td class="number">{{ datautilidad[0].numeroCargaUtilidad }}</td>
+                                            </tr>
+                                            <tr ng-show="datautilidad[0].valorCargaUtilidad && datautilidad[0].valorCargaUtilidad!=0">
+                                                <td>Valor Total por Cargas</td>
+                                                <td class="number">{{ datautilidad[0].valorCargaUtilidad }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Valor por Empleado</td>
+                                                <td class="number">{{ datautilidad[0].valorPropiaUtilidad }}</td>
+                                            </tr>
+                                            <tr ng-show="datautilidad[0].valorDescuentoUtilidad && datautilidad[0].valorDescuentoUtilidad!=0">
+                                                <td>Valor de Descuentos</td>
+                                                <td class="number">{{ datautilidad[0].valorDescuentoUtilidad }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Totales -->
+                                <div class="col-md-12 col-sm-12" ng-show="datautilidad">
+                                    <div role="alert" class="alert alert-success alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon"><span class="s7-cash"></span></div>
+                                        <div class="message alert alert-success alert-dismissible">
+                                            <h3 style="color:#ffffff;"><strong>Líquido a Recibir</strong> {{ ((datautilidad[0].valorPropiaUtilidad | float) + (datautilidad[0].valorCargaUtilidad | float) - (datautilidad[0].valorDescuentoUtilidad | float)).toFixed(2) }}</h3>
+                                            <!-- Dosmil docientos cincuenta dolares 00/00 -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Si aplica PDF -->
+                                <div class="col-md-12 col-sm-12" ng-show="datautilidad[0].urlUtilidad">
+                                    <div role="alert" class="alert alert-danger alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon" style="cursor: pointer" ng-click="descargarPdfUtilidad()"><span class="s7-download"></span></div>
+                                        <div class="message">
+                                            <strong>Período</strong> {{ datautilidad[0].anioUtilidad }}<br> Sus Utilidades se generon con exito.<br>
+                                            <strong class="text-danger" style="cursor: pointer" ng-click="descargarPdfUtilidad()">Descargar PDF</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="text-warning"><b>Período</b></label>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2018" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad13">
+                                        <label for="rad13">2018</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2017" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad14">
+                                        <label for="rad14">2017</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2016" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad15">
+                                        <label for="rad15">2016</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2015" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad16">
+                                        <label for="rad16">2015</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2014" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad17">
+                                        <label for="rad17">2014</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2013" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad18">
+                                        <label for="rad18">2013</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" name="rad3" value="2012" ng-model="utilidad.anio" ng-change="consultaUtilidad()" id="rad19">
+                                        <label for="rad19">2012</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- beneficios -->
+                        <div id="datosbene" class="tab-pane cont">
+                            <div class="col-md-9">
+                                <!-- Instrucciones -->
+                                <div class="col-md-12 col-sm-12">
+                                    <h4 class="text-warning"><b>Instrucciones</b></h4>
+
+                                    <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                        <div class="icon"><span class="s7-attention"></span></div>
+                                        <div class="message">
+                                            <strong>1. </strong>Seleccione el Año del Período que desee ver sus Beneficios.<br>
+                                            <strong>2. </strong>Seleccione un Mes para cargar sus Beneficios.<br>
+                                            <strong>3. </strong>Descarge el PDF de sus Beneficios si es necesario.<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Campos -->
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Empresa</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.empresaNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.departamentoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.cargoNombre | getNombrePropio:false }}" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cédula</label>
+                                        <input type="text" placeholder="" value="{{ GlbUsuario.usuarioCedula | getNombrePropio:false }}" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <!-- Tabla detalle -->
+                                <div class="col-md-6 col-sm-12" ng-show="databeneficioresult.beneficiosIngresos">
+                                    <table class="table table-striped table-fw-widget table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" class="text-success text-center">INGRESOS BENEFICIOS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="no-border-x">
+                                            <tr ng-repeat="item in databeneficioresult.beneficiosIngresos">
+                                                <td>{{ item.beneficiosIngrNombre }}</td>
+                                                <td class="number">{{ item.beneficiosIngrValor }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-success"><b>Total</b></span></td>
+                                                <td class="number"><span class="text-success"><b>{{ databeneficioresult.totalBeneficiosIngresos }}</b></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-show="databeneficioresult.beneficiosEgresos">
+                                    <table class="table table-striped table-fw-widget table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" class="text-danger text-center">EGRESOS BENEFICIOS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="no-border-x">
+                                            <tr ng-repeat="item in databeneficioresult.beneficiosEgresos">
+                                                <td>{{ item.beneficiosEgreNombre }}</td>
+                                                <td class="number">{{ item.beneficiosEgreValor }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-danger"><b>Total</b></span></td>
+                                                <td class="number"><span class="text-danger"><b>{{ databeneficioresult.totalBeneficiosEgresos }}</b></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Totales -->
+                                <div class="col-md-12 col-sm-12" ng-show="databeneficioresult.totalBeneficiosIngresos">
+                                    <div role="alert" class="alert alert-success alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon"><span class="s7-cash"></span></div>
+                                        <div class="message alert alert-success alert-dismissible">
+                                            <h3 style="color:#ffffff;"><strong>Líquido a Recibir</strong> {{ (databeneficioresult.totalBeneficiosIngresos - databeneficioresult.totalBeneficiosEgresos).toFixed(2) }}</h3>
+                                            <!--Setecientos cuarenta y tres dolares 00/00-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Si aplica PDF -->
+                                <div class="col-md-12 col-sm-12" ng-show="databeneficioresult.urlBeneficio">
+                                    <div role="alert" class="alert alert-danger alert-icon alert-icon-color alert-dismissible">
+                                        <div class="icon" style="cursor: pointer" ng-click="descargarPdfBeneficio()"><span class="s7-download"></span></div>
+                                        <div class="message">
+                                            <strong>Período</strong> {{ datarol.mes | nombremes }}, {{ datarol.anio }}<br> Su Rol de Beneficios se genero con exito.<br>
+                                            <strong class="text-danger" style="cursor: pointer" ng-click="descargarPdfBeneficio()">Descargar PDF</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="text-info">Año</label>
+                                    <select class="form-control" ng-model="databeneficio.anio" ng-change="consultaBeneficio()">
+                                        <option value="2018">2018</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2014">2014</option>
+                                        <option value="2013">2013</option>
+                                        <option value="2012">2012</option>
+                                    </select>
+
+                                    <label class="text-warning">&nbsp;</label>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="12" ng-model="databeneficio.mes" id="rad20" ng-change="consultaBeneficio()">
+                                        <label for="rad20">Diciembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="11" ng-model="databeneficio.mes" id="rad21" ng-change="consultaBeneficio()">
+                                        <label for="rad21">Noviembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="10" ng-model="databeneficio.mes" id="rad22" ng-change="consultaBeneficio()">
+                                        <label for="rad22">Octubre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="9" ng-model="databeneficio.mes" id="rad23" ng-change="consultaBeneficio()">
+                                        <label for="rad23">Septiembre</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="8" ng-model="databeneficio.mes" id="rad24" ng-change="consultaBeneficio()">
+                                        <label for="rad24">Agosto</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="7" ng-model="databeneficio.mes" id="rad25" ng-change="consultaBeneficio()">
+                                        <label for="rad25">Julio</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="6" ng-model="databeneficio.mes" id="rad26" ng-change="consultaBeneficio()">
+                                        <label for="rad26">Junio</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="5" ng-model="databeneficio.mes" id="rad27" ng-change="consultaBeneficio()">
+                                        <label for="rad27">Mayo</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="4" ng-model="databeneficio.mes" id="rad28" ng-change="consultaBeneficio()">
+                                        <label for="rad28">Abril</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="3" ng-model="databeneficio.mes" id="rad29" ng-change="consultaBeneficio()">
+                                        <label for="rad29">Marzo</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="2" ng-model="databeneficio.mes" id="rad30" ng-change="consultaBeneficio()">
+                                        <label for="rad30">Febrero</label>
+                                    </div>
+                                    <div class="am-radio">
+                                        <input type="radio" checked="" name="rad2" value="1" ng-model="databeneficio.mes" id="rad31" ng-change="consultaBeneficio()">
+                                        <label for="rad31">Enero</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nifty Modal Comunicaciones -->
+    <div id="modal-rol" class="md-modal colored-header success md-effect-10">
+        <div style="width: 900px;" class="md-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+                <h3 class="modal-title">Firma Electrónica</h3>
+            </div>
+            <form ng-submit="submitFirma()" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>Adjuntar</label>
+                                <input type="file" file-model="formRol.usuarioFirma" name="file" id="certificadoArchivo" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default md-close">Cerrar</button>
+                    <button type="submit" data-dismiss="modal" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="md-overlay" style="z-index:1999"></div>
+</div>

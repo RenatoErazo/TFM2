@@ -1,0 +1,327 @@
+<div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="info-block panel panel-default">
+
+            <div class="panel-body">
+                <div class="tab-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#datos" data-toggle="tab" aria-expanded="false">Nueva Solicitud</a></li>
+                        <!--<li class="hidden-xs" ng-show="(kardex | keylength)>0"><a href="#cargas" data-toggle="tab" aria-expanded="true">Kardex permisoes</a></li>-->
+                        <li class="hidden-xs"><a href="#kardex" data-toggle="tab" ng-click="getkardex();getkardexequipo()" aria-expanded="true">Permisos Solicitados</a></li>
+                        <li class=""><a href="#contacto" data-toggle="tab" aria-expanded="false">Aprobaciones</a></li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div id="datos" class="tab-pane cont active">
+
+                            <div class="col-md-12 col-sm-12">
+                                <!-- Instrucciones -->
+                                <h4 class="text-warning">Instrucciones</h4>
+
+                                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                    <div class="icon"><span class="s7-info"></span></div>
+                                    <div class="message">
+                                        <strong>1. </strong>La fecha de socilitud de permisos no debe ser a continuación de una solicitud de vacación.<br><strong>2. </strong>Las solicitudes de permiso serán aprobadas por el Jefe Inmediato.<br><strong>3. </strong>Las
+                                        solicitudes de permiso deberán ser realizadas con 1 día de anticipación.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form ng-submit="solicitar()">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Apellidos y Nombres</label>
+                                        <input type="text" placeholder="" ng-model="permiso.nombres" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Ingreso a la Empresa</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" datetime="yyyy-MM-dd" ng-model="permiso.usuarioFechaIngreso" readonly="readonly" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="" ng-model="permiso.departamentoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" ng-model="permiso.cargoNombre" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Inicio Permisos</label>
+                                        <div data-start-view="2" data-date-format="yyyy-mm-dd hh:ii" datetimepicker data-link-field="dtp_input1" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" ng-model="permiso.fechaInicioPermisos" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Fin Permisos</label>
+                                        <div data-start-view="2" data-date-format="yyyy-mm-dd hh:ii" datetimepicker data-link-field="dtp_input1" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" ng-model="permiso.fechaFinPermisos" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Motivo</label>
+                                        <select class="form-control" ng-model="permiso.motivos">
+                                                <option value="{{ item.motivoPermisoCodigo }}" ng-repeat="item in motivos" ng-selected="{{ item.motivoPermisoCodigo == permiso.motivos }}">{{ item.motivoPermisoNombre }}</option>
+                                            </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Comentarios</label>
+                                        <textarea class="form-control" ng-model="permiso.comentario">{{ permiso.comentario }}</textarea>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-12 col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-space btn-primary">Solicitar</button>
+                                </div>
+                            </form>
+
+
+
+                            <!--
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="permiso.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                        </div>
+
+                        <div id="kardex" class="tab-pane cont">
+                            <div class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                                <span class="panel-title text-info" style="padding-left: 13px">	Mis Permisos</span>
+                            </div>
+                            <table class="table table-striped table-fw-widget table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th class="text-center">Motivo</th>
+                                        <th class="text-center">Primer Aprobador</th>
+                                        <th class="text-center">Segundo Aprobador</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in kardex">
+                                        <td>{{ item.solicitudPermisoFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudPermisoFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudPermisoFechaInicio | limitTo:10 | limitTo:-2}}
+                                            <br><b>Hora:</b> {{ item.solicitudPermisoFechaInicio | limitTo:16 | limitTo:-5}}</td>
+                                        <td>{{ item.solicitudPermisoFechaFin | limitTo:4 | limitTo:-4 }}-{{ item.solicitudPermisoFechaFin | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudPermisoFechaFin | limitTo:10 | limitTo:-2}}<br><b>Hora:</b>                                            {{ item.solicitudPermisoFechaFin | limitTo:16 | limitTo:-5}}</td>
+                                        <td class="text-center">{{ item.motivoPermisoNombre }}</td>
+                                        <td class="text-center" ng-class="item.solicitudPermisoEstado=='A'?'text-success':(item.solicitudPermisoEstado=='N'?'text-danger':'text-warning')">{{ item.solicitudPermisoEstado | permisoestado }}</td>
+                                        <td class="text-center" ng-class="item.solicitudSegundoPermisoEstado=='A'?'text-success':(item.solicitudSegundoPermisoEstado=='N'?'text-danger':'text-warning')">{{ item.solicitudSegundoPermisoEstado | permisoestado }}</td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                            <div ng-if="(kardexequipo | keylength)>0" class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                                <span class="panel-title text-info" style="padding-left: 13px">	Kardex Mi Equipo</span>
+                            </div>
+
+                            <table ng-if="(kardexequipo | keylength)>0" class="table table-striped table-fw-widget table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th class="text-center">Motivo</th>
+                                        <th class="text-center">Primer Aprobador</th>
+                                        <th class="text-center">Segundo Aprobador</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in kardexequipo">
+                                        <td><b>{{ item.usuarioNombreCompuesto }}</b></td>
+                                        <td>{{ item.solicitudPermisoFechaInicio | limitTo:4 | limitTo:-4 }}-{{ item.solicitudPermisoFechaInicio | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudPermisoFechaInicio | limitTo:10 | limitTo:-2}}
+                                            <br><b>Hora:</b> {{ item.solicitudPermisoFechaInicio | limitTo:16 | limitTo:-5}}</td>
+                                        <td>{{ item.solicitudPermisoFechaFin | limitTo:4 | limitTo:-4 }}-{{ item.solicitudPermisoFechaFin | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.solicitudPermisoFechaFin | limitTo:10 | limitTo:-2}}<br><b>Hora:</b>                                            {{ item.solicitudPermisoFechaFin | limitTo:16 | limitTo:-5}}</td>
+                                        <td class="text-center">{{ item.motivoPermisoNombre }}</td>
+                                        <td class="text-center" ng-class="item.solicitudPermisoEstado=='A'?'text-success':(item.solicitudPermisoEstado=='N'?'text-danger':'text-warning')">{{ item.solicitudPermisoEstado | permisoestado }}</td>
+                                        <td class="text-center" ng-class="item.solicitudSegundoPermisoEstado=='A'?'text-success':(item.solicitudSegundoPermisoEstado=='N'?'text-danger':'text-warning')">{{ item.solicitudSegundoPermisoEstado | permisoestado }}</td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            {{ }}
+                        </div>
+
+                        <div id="contacto" class="tab-pane">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" placeholder="" class="form-control" ng-model="filtro.nombre">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    <select class="form-control" ng-model="filtro.estado">
+                                            <option ng-repeat="item in options" value="{{ item.value }}">{{ item.name }}</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Inicio</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechainicio" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha Fin</label>
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <input size="16" type="text" value="" readonly="readonly" ng-model="filtro.fechafin" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 spacer text-center">
+                                <button type="button" class="btn btn-space btn-primary" ng-click="buscar()">Buscar</button>
+                                <button type="button" class="btn btn-space btn-primary">Limpiar</button>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table table-striped table-fw-widget table-hover" ng-show="((listaaprobar | filter:{solicitudPermisoEstado:estado} | keylength)>0 || (listaaprobarsegundo | filter:{solicitudSegundoPermisoEstado:estado} | keylength)>0)">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="font-size:12px;">&nbsp;</th>
+                                            <th class="text-center" style="font-size:14px;">Empleado</th>
+                                            <th class="text-center" style="font-size:14px;">Motivo</th>
+                                            <th class="text-center" style="font-size:14px;">Fechas</th>
+                                            <!-- <th class="text-center">Días</th> -->
+                                            <th class="text-center" style="font-size:14px;">{{ (estado=='P'?'Acción':'Estado') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-border-x">
+
+                                        <tr ng-repeat="item in listaaprobar" ng-show="item.solicitudPermisoEstado==estado">
+                                            <td class="user-avatar" nowrap> <img ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.sex_usuario ) }}?v={{rand}}"></td>
+                                            <td align="left" style="font-size:10px;" nowrap>{{ item.usuarioNombres }}<br>{{ item.usuarioApellidos }}</td>
+                                            <td align="center" style="font-size:9px;" nowrap>{{ item.motivoPermisoNombre }}</td>
+                                            <td align="center" style="font-size:9px;" nowrap>{{ item.solicitudPermisoFechaInicio }}<br>{{ item.solicitudPermisoFechaFin }}</td>
+                                            <!-- <td align="center">{{ item.solicitudPermisoDiasSolicitados_FUNC }}</td> -->
+                                            <td align="center" style="font-size:9px;">
+                                                <div class="input-group  col-md-12" ng-show="estado=='P'">
+                                                    <input type="text" class="form-control" ng-model="item.solicitudPermisoObservacion" placeholder="Descripción">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a ng-click="AccionSolicitud(item,'A')">Aprobar</a></li>
+                                                            <li><a ng-click="AccionSolicitud(item,'N')">Postergar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <p ng-show="estado!='P'" class="{{ (estado=='A'?'text-success':'text-danger') }}">{{ (estado=='A'?'Aprobada':'Postergada') }}</p>
+                                            </td>
+                                        </tr>
+
+                                        <tr ng-repeat="item in listaaprobarsegundo" ng-show="item.solicitudSegundoPermisoEstado==estado">
+                                            <td class="user-avatar" nowrap> <img ng-src="{{ (item.usuarioFoto | getValidaImagen:'U':item.sex_usuario ) }}?v={{rand}}"></td>
+                                            <td align="left" style="font-size:10px;" nowrap>{{ item.usuarioNombres }}<br>{{ item.usuarioApellidos }}</td>
+                                            <td align="center" style="font-size:9px;" nowrap>{{ item.motivoPermisoNombre }}</td>
+                                            <td align="center" style="font-size:9px;" nowrap>{{ item.solicitudPermisoFechaInicio }}<br>{{ item.solicitudPermisoFechaFin }}</td>
+                                            <!-- <td align="center">{{ item.solicitudPermisoDiasSolicitados_FUNC }}</td> -->
+                                            <td align="center" style="font-size:9px;">
+                                                <div class="input-group  col-md-12" ng-show="estado=='P'">
+                                                    <input type="text" class="form-control" ng-model="item.solicitudPermisoObservacion" placeholder="Descripción">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a ng-click="AccionSolicitudSegundo(item,'A')">Aprobar</a></li>
+                                                            <li><a ng-click="AccionSolicitudSegundo(item,'N')">Postergar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <p ng-show="estado!='P'" class="{{ (estado=='A'?'text-success':'text-danger') }}">{{ (estado=='A'?'Aprobada':'Postergada') }}</p>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                <div class="icon-container" ng-show="((listaaprobar | filter:{solicitudPermisoEstado:estado} | keylength)==0 && (listaaprobarsegundo | filter:{solicitudPermisoEstado:estado} | keylength)==0) && accion">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene aprobaciones.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- widget -->
+    <widget-calendario class="col-lg-3 hidden-md hidden-xs" data="{{ calendario }}"></widget-calendario>
+
+</div>

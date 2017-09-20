@@ -1,0 +1,68 @@
+
+table tbody td,th {
+	padding: 7px 8px;
+	font-size: 12px;
+}
+
+.tableInforme td {
+	border-left: 1px solid #DADADA;
+	border-bottom: 1px solid #dadada;
+	padding: 7px 8px;
+}
+
+.text-primary {
+	color: #337ab7;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+}
+
+h3, .h3 {
+	font-size: 24px;
+}
+
+.hthin {
+	font-family: "Raleway", Helvetica, sans-serif !important;
+	font-weight: 100 !important;
+}
+
+
+.tableInforme tr td,th
+{
+	text-align: center;
+	font-weight: normal;
+	padding: 5px;
+}
+
+.tableInforme tr td:first-child
+{
+	background-color: #C9C3BA;
+}
+
+.tableInforme tr td:last-child
+{
+	background-color: #FFF7E1;
+}
+
+
+.tableInforme tr:first-child
+{
+	background-color: #B93E40;
+}
+
+.tableInforme tr:last-child td:first-child
+{
+	background-color: white;
+}
+
+.tableInforme tr:last-child td:last-child
+{
+	background-color: #FDEAC7;
+}
+div.texto{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size: 12px;
+
+}

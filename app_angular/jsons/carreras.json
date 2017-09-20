@@ -1,0 +1,62 @@
+{
+    "name":"UTE",
+    "children":
+        [
+            {
+            "name":"Comex",
+            "children":
+                [
+                    {
+                     "name": "Comex",
+                     "docentes":"11",
+                     "primer":"35",
+                     "graduados":"20",
+                     "total":"488"
+                    }
+                   
+                ]
+            },
+            {
+            "name":"Finanzas",
+            "children":
+                [
+                    
+                    {
+                     "name": "Finanzas",
+                     "docentes":"21",
+                     "primer":"20",
+                     "graduados":"15",
+                     "total":"358"
+                    }
+                ]
+            },  
+            {
+            "name":"Marketing",
+            "children":
+                [
+                    {
+                     "name": "Marketing",
+                     "docentes":"6",
+                     "primer":"0",
+                     "graduados":"5",
+                     "total":"200"
+                    }
+                    
+                ]
+            },
+            {
+                "name":"Empresas",
+                "children":
+                    [
+                        
+                        {
+                            "name": "Empresas",
+                            "docentes":"20",
+                            "primer":"10",
+                            "graduados":"18",
+                            "total":"300"
+                        }
+                    ]
+                }
+        ]
+    }

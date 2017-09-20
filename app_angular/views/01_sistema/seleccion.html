@@ -1,0 +1,297 @@
+<div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="info-block panel panel-default">
+
+            <div class="panel-body">
+                <div class="tab-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#datos" data-toggle="tab" aria-expanded="false">Nueva Requisición</a></li>
+                        <!--<li class="hidden-xs" ng-show="(kardex | keylength)>0"><a href="#cargas" data-toggle="tab" aria-expanded="true">Kardex permisoes</a></li>-->
+                        <li class=""><a href="#contacto" data-toggle="tab" aria-expanded="false" ng-click="cargaSolicitudes()">Mis Requisiciones</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="datos" class="tab-pane cont active">
+
+                            <div class="col-md-12 col-sm-12">
+                                <!-- Instrucciones -->
+                                <h4 class="text-warning">Instrucciones</h4>
+
+                                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                                    <div class="icon"><span class="s7-info"></span></div>
+                                    <div class="message">
+                                        <strong>1. </strong>La fecha de socilitud de permisos no debe ser a continuación de una solicitud de vacación.<br><strong>2. </strong>Las solicitudes de permiso serán aprobadas por el Jefe Inmediato.<br><strong>3. </strong>Las
+                                        solicitudes de permiso deberán ser realizadas con 1 día de anticipación.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form ng-submit="solicitar()">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Apellidos y Nombres</label>
+                                        <input type="text" placeholder="" ng-model="seleccione.nombres" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Ingreso a la Empresa</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" datetime="yyyy-MM-dd" ng-model="seleccione.usuarioFechaIngreso" readonly="readonly" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Fecha de Solicitud</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" readonly="readonly" ng-model="seleccione.usuarioFechaSolicitud" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Departamento</label>
+                                        <input type="text" placeholder="" value="" ng-model="seleccione.departamentoNombre" readonly="readonly" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo</label>
+                                        <input type="text" placeholder="" ng-model="seleccione.cargoNombre" readonly="readonly" class="form-control"></div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Cargo Requerido</label>
+                                        <select class="form-control" ng-model="formSeleccion.cargoCodigoSeleccion" required>
+                                            <option value="" ng-selected="{{ seleccione.cargo == '' }}">...</option>
+                                            <option value="{{ item.cargoCodigo }}" ng-repeat="item in cargos" ng-selected="{{ item.cargoCodigo == seleccione.cargo }}">{{ item.cargoNombre }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Ciudad</label>
+                                        <select class="form-control" ng-model="seleccione.ciudad" ng-change="changeCiudad()" required>
+                                            <option value="" ng-selected="{{ seleccione.ciudad == '' }}">...</option>
+                                            <option value="{{ item.ciudadCodigo }}" ng-repeat="item in ciudades" ng-selected="{{ item.ciudadCodigo == seleccione.ciudad }}">{{ item.ciudadNombre }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Referencia</label>
+                                        <select class="form-control" ng-model="formSeleccion.referenciaCodigoSeleccion" required>
+                                            <option value="" ng-selected="{{ formSeleccion.referenciaCodigoSeleccion == '' }}">...</option>
+                                            <option value="{{ item.referenciaCodigo }}" ng-repeat="item in referencias" ng-selected="{{ item.referenciaCodigo == formSeleccion.referenciaCodigoSeleccion }}">{{ item.referenciaNombre }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Tipo Contratación</label>
+
+                                        <div class="am-radio">
+                                            <input type="radio" name="rad1" id="rad1" value="N" ng-model="formSeleccion.tipoContratarSeleccion" required />
+                                            <label for="rad1">Nueva Posición</label>
+                                        </div>
+                                        <div class="am-radio">
+                                            <input type="radio" name="rad1" id="rad2" value="R" ng-model="formSeleccion.tipoContratarSeleccion" />
+                                            <label for="rad2">Reemplazo</label>
+                                        </div>
+                                        <div class="am-radio">
+                                            <input type="radio" name="rad1" id="rad3" value="P" ng-model="formSeleccion.tipoContratarSeleccion" />
+                                            <label for="rad3">Practicante</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Fecha Requerida Contratar</label>
+                                        <div data-min-view="2" data-date-format="yyyy-mm-dd" datetimepicker class="input-group date col-md-12 col-xs-12">
+                                            <input size="16" type="text" value="" required ng-model="formSeleccion.fechaRequisicionSeleccion" class="form-control"><span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>No. de Contrataciones Requeridas</label>
+                                        <input type="text" placeholder="" class="form-control" required ng-model="formSeleccion.numeroContratarSeleccion" onkeypress="return controla_digitacion_decimal(event,this,0);">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Observación</label>
+                                        <textarea class="form-control" ng-model="formSeleccion.observacionSeleccion"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12" style="padding: 0px;">
+                                    <div class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                                        <span class="panel-title text-info" style="padding-left: 13px">Otras Características</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Género</label>
+
+                                        <div class="am-radio">
+                                            <input type="radio" value="M" name="rad2" id="rad6" ng-model="formSeleccion.generoContratarSeleccion" required />
+                                            <label for="rad6">Masculino</label>
+                                        </div>
+                                        <div class="am-radio">
+                                            <input type="radio" value="F" name="rad2" id="rad7" ng-model="formSeleccion.generoContratarSeleccion" />
+                                            <label for="rad7">Femenino</label>
+                                        </div>
+                                        <div class="am-radio">
+                                            <input type="radio" value="C" name="rad2" id="rad8" ng-model="formSeleccion.generoContratarSeleccion" />
+                                            <label for="rad8">Cualquiera</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Edad desde</label>
+                                        <input type="text" placeholder="" class="form-control" required ng-model="formSeleccion.edadDesdeSeleccion" onkeypress="return controla_digitacion_decimal(event,this,0);">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Hasta</label>
+                                        <input type="text" placeholder="" class="form-control" required ng-model="formSeleccion.edadHastaSeleccion" onkeypress="return controla_digitacion_decimal(event,this,0);">
+                                    </div>
+                                </div>
+
+                                <!--  <div class="col-md-12 col-sm-12" style="padding: 0px;">
+                                    <div class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                                        <span class="panel-title text-info" style="padding-left: 13px">Conecciones</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <span class="col-sm-6"><img src="../../assets/img/Iconos/multi_rect.jpeg" width="150px" height="60px"/></span>
+
+                                        <div class="col-sm-6 xs-pt-5">
+                                            <div class="switch-button switch-button-success">
+                                                <input type="checkbox" name="swt1" id="swt1"><span>
+                                                <label for="swt1"></label></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <span class="col-sm-6"><img src="../../assets/img/Iconos/link_rect.jpg" width="150px" height="60px"/></span>
+
+                                        <div class="col-sm-6 xs-pt-5">
+                                            <div class="switch-button switch-button-success">
+                                                <input type="checkbox" name="swt2" id="swt2"><span>
+                                                <label for="swt2"></label></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6" style="margin-top:20px">
+                                    <div class="form-group">
+                                        <span class="col-sm-6"><img src="../../assets/img/Iconos/porfin_rect.jpeg" width="150px" height="50px"/></span>
+                                        <div class="col-sm-6 xs-pt-5">
+                                            <div class="switch-button switch-button-success">
+                                                <input type="checkbox" name="swt3" id="swt3"><span>
+                                                <label for="swt3"></label></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6 col-sm-6" style="margin-top:20px">
+                                    <div class="form-group">
+                                        <span class="col-sm-6"><img src="../../assets/img/Iconos/www_rect.jpg" width="150px" height="50px"/></span>
+                                        <div class="col-sm-6 xs-pt-5">
+                                            <div class="switch-button switch-button-success">
+                                                <input type="checkbox" name="swt4" id="swt4"><span>
+                                                <label for="swt4"></label></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+ -->
+
+                                <!--<div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Sector de Residencia</label>
+                                        <input type="text" placeholder="" class="form-control" ng-model="">
+                                    </div>
+                                </div>-->
+
+                                <div class="col-md-12 col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-space btn-primary">Solicitar</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                        <div id="contacto" class="tab-pane">
+
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table table-striped table-fw-widget table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Fehca Solicitud</th>
+                                            <th class="text-center">Cargo</th>
+                                            <th class="text-center">No Sollicitud</th>
+                                            <th class="text-center">Porcentaje</th>
+                                            <th class="text-center">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-border-x">
+
+                                        <tr ng-repeat="item in requisiciones">
+                                            <td align="center">{{ item.fechaRegistroSeleccion | limitTo:4 | limitTo:-4 }}-{{ item.fechaRegistroSeleccion | limitTo:7 | limitTo:-2 | nombremes | limitTo:3}}-{{ item.fechaRegistroSeleccion | limitTo:10 | limitTo:-2}}</td>
+                                            <td align="center" nowrap>{{ item.cargoNombre }}</td>
+                                            <td align="center" nowrap><b>(MAT_00{{ item.solicitudCodigoSeleccion }})</b></td>
+                                            <td class="text-center" align="center text-warning">
+                                                <div class="col-md-12 col-sm-12 text-center">
+                                                    <span class="chart" chartgraf data-color="#ffc870" data-percent="{{ ($index+1)*10 }}">
+                                                        <span class="percent">{{ ($index+1)*10 }}</span>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td align="center"><span class="text-warning">En proceso</span></td>
+                                            <!--<td align="center"><button class="btn btn-danger">Anular</button></td>-->
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+
+
+                                <div class="icon-container" ng-show="((listaaprobar | filter:{solicitudPermisoEstado:estado} | keylength)==0 && (listaaprobarsegundo | filter:{solicitudPermisoEstado:estado} | keylength)==0) && accion">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene aprobaciones.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- widget -->
+    <widget-calendario class="col-lg-3 hidden-md hidden-xs" data="{{ calendario }}"></widget-calendario>
+
+</div>

@@ -1,0 +1,685 @@
+<style type="text/css">
+    .wizard-modal p {
+        margin: 0 0 10px;
+        padding: 0;
+    }
+    
+    #wizard-ns-detail-servers,
+    .wizard-additional-servers {
+        font-size: 12px;
+        margin-top: 10px;
+        margin-left: 15px;
+    }
+    
+    #wizard-ns-detail-servers>li,
+    .wizard-additional-servers li {
+        line-height: 20px;
+        list-style-type: none;
+    }
+    
+    #wizard-ns-detail-servers>li>img {
+        padding-right: 5px;
+    }
+    
+    .wizard-modal .chzn-container .chzn-results {
+        max-height: 150px;
+    }
+    
+    .wizard-addl-subsection {
+        margin-bottom: 40px;
+    }
+    
+    .create-server-agent-key {
+        margin-left: 15px;
+        width: 90%;
+    }
+</style>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="../../../assets/wizard/js/html5shiv-3.7.0.js"></script>
+<script src="../../../assets/wizard/js/respond-1.3.0.min.js"></script>
+<![endif]-->
+<div class="wizard" id="satellite-wizard" wizard show="{{ ($parent.GlbUsuario.usuarioDebeActualizar=='S' || $parent.GlbUsuario.usuarioCodigoCampana!=0 )?'S':'N'  }}" data-title="Actualización de Datos">
+
+    <!-- datos personales -->
+    <div class="wizard-card col-md-12" data-cardname="name">
+        <h3>Datos Personales</h3>
+
+
+        <div style="overflow: auto;height: 320px;position: relative">
+
+            <div class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                <span class="panel-title text-info" style="padding-left: 13px">	Datos Personales del Empleado</span>
+            </div>
+
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <label>Cédula de Identidad</label>
+                    <input type="text" placeholder="" value="{{ $parent.GlbUsuario.usuarioCedula }}" maxlength="10" readonly="readonly" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" placeholder="" value="{{ $parent.GlbUsuario.usuarioNombre1 + ' ' + $parent.GlbUsuario.usuarioNombre2 | getNombrePropio:true }}" readonly="readonly" maxlength="60" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <input type="text" placeholder="" value="{{ $parent.GlbUsuario.usuarioApellido1 + ' ' + $parent.GlbUsuario.usuarioApellido2 | getNombrePropio:true  }}" readonly="readonly" maxlength="60" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>País de Nacimiento</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioPaisNacimiento" class="form-control" ng-change="refrescaPais()">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioPaisNacimiento == '-1' }}">...</option>
+                        <option value="{{ item.paisCodigo }}" ng-repeat="item in $parent.paises" ng-selected="{{ item.paisCodigo == $parent.GlbUsuario.usuarioPaisNacimiento }}">{{ item.paisNombre }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Provincia de Nacimiento</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioProvinciaNacimiento" class="form-control" ng-change="refrescaProvincia()">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioProvinciaNacimiento == '-1' }}">...</option>
+                        <option value="{{ item.provinciaCodigo }}" ng-repeat="item in $parent.provincias" ng-selected="{{ item.provinciaCodigo == $parent.GlbUsuario.usuarioProvinciaNacimiento }}">{{ item.provinciaNombre }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Ciudad de Nacimiento</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioCiudadNacimiento" class="form-control">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioCiudadNacimiento == '-1' }}">...</option>
+                        <option value="{{ item.ciudadCodigo }}" ng-repeat="item in $parent.ciudades" ng-selected="{{ item.ciudadCodigo == $parent.GlbUsuario.usuarioCiudadNacimiento }}">{{ item.ciudadNombre }}</option>
+                        <option value="-2" ng-selected="{{ $parent.GlbUsuario.usuarioCiudadNacimiento == '-2' }}">OTRO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12" ng-show="$parent.GlbUsuario.usuarioCiudadNacimiento=='-2'">
+                <div class="form-group">
+                    <label>Nombre de la Ciudad</label>
+                    <input type="text" placeholder="" maxlength="10" value="{{ $parent.GlbUsuario.usuarioCiudadNombreNacimiento }}" ng-model="$parent.GlbUsuario.usuarioCiudadNombreNacimiento" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Estado Civil</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioCivilEstado" class="form-control">
+                        <option value="" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == '' }}">...</option>
+                        <option value="C" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == 'C' }}">Casado</option>
+                        <option value="S" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == 'S' }}">Soltero</option>
+                        <option value="V" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == 'V' }}">Viudo</option>
+                        <option value="D" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == 'D' }}">Divorciado</option>
+                        <option value="U" ng-selected="{{ $parent.GlbUsuario.usuarioCivilEstado == 'U' }}">Unión Libre</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Extranjero</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioTieneNacionalidad" class="form-control" ng-change="seteaNacionalidad()">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioTieneNacionalidad == '-1' }}">...</option>
+                        <option value="S" ng-selected="{{ $parent.GlbUsuario.usuarioTieneNacionalidad == 'S' }}">Sí</option>
+                        <option value="N" ng-selected="{{ $parent.GlbUsuario.usuarioTieneNacionalidad == 'N' }}">No</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-12 col-sm-12" ng-show="$parent.GlbUsuario.usuarioTieneNacionalidad=='S'">
+                <div class="form-group">
+                    <label>Nacionalidad</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioPaisSegundaNacimiento" class="form-control">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioPaisSegundaNacimiento == '-1' }}">...</option>
+                        <option value="{{ item.paisCodigo }}" ng-repeat="item in $parent.paises" ng-selected="{{ item.paisCodigo == $parent.GlbUsuario.usuarioPaisSegundaNacimiento }}">{{ item.paisNombre }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12" style="padding: 0px;">
+                <div class="panel-heading" style="padding-left: -5px;margin-left: 13px;background-color: whitesmoke;margin-bottom: 13px;">
+                    <span class="panel-title text-info" style="padding-left: 13px">	Dirección del Domicilio</span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12" ng-show="$parent.alias=='hivimar'">
+                <div class="form-group">
+                    <label>Provincia de Domicilio</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioProvinciaDomicilio" class="form-control" ng-change="refrescaProvincia_domicilio()">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioProvinciaDomicilio == '-1' }}">...</option>
+                        <option value="{{ item.provinciaCodigo }}" ng-repeat="item in $parent.provincias_domicilio" ng-selected="{{ item.provinciaCodigo == $parent.GlbUsuario.usuarioProvinciaDomicilio }}">{{ item.provinciaNombre }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12" ng-show="$parent.alias=='hivimar'">
+                <div class="form-group">
+                    <label>Canton de Domicilio</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioCantonDomicilio" class="form-control" ng-change="refrescaCanton_domicilio()">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioCantonDomicilio == '-1' }}">...</option>
+                        <option value="{{ item.cantonCodigo }}" ng-repeat="item in $parent.cantones_domicilio" ng-selected="{{ item.cantonCodigo == $parent.GlbUsuario.usuarioCantonDomicilio }}">{{ item.cantonNombre }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12" ng-show="$parent.alias=='hivimar'">
+                <div class="form-group">
+                    <label>Parroquia de Domicilio</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioParroquiaDomicilio" class="form-control">
+                        <option value="-1" ng-selected="{{ $parent.GlbUsuario.usuarioParroquiaDomicilio == '-1' }}">...</option>
+                        <option value="{{ item.parroquiaCodigo }}" ng-repeat="item in $parent.parroquias_domicilio" ng-selected="{{ item.parroquiaCodigo == $parent.GlbUsuario.usuarioParroquiaDomicilio }}">{{ item.parroquiaNombre }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Tipo de Vivienda</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioTipoVivienda" class="form-control">
+                        <option value="C">Casa</option>
+                        <option value="D">Departamento</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Ubicada en</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioUbicacionVivienda" class="form-control">
+                        <option value="I">Independiente</option>
+                        <option value="C">Conjunto Habitacional</option>
+                        <option value="U">Urbanización</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Pertenece Vivienda</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioPerteneceVivienda" class="form-control">
+                        <option value="P">Propio</option>
+                        <option value="A">Arrendado</option>
+                        <option value="R">Prestada</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Calle Principal</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioDireccionPrincipal" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Calle Secundaria</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioDireccionSecundaria" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Número</label>
+                    <input type="text" placeholder="" maxlength="10" ng-model="$parent.GlbUsuario.usuarioDireccionNumero" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Piso</label>
+                    <input type="text" placeholder="" maxlength="10" ng-model="$parent.GlbUsuario.usuarioDireccionPiso" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Email Personal</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioMailExterno" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Teléfono Fijo</label>
+                    <input type="text" placeholder="" maxlength="9" onkeypress="controla_digitacion_decimal (event, this, 0);" ng-model="$parent.GlbUsuario.usuarioTelefono" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Teléfono Celular</label>
+                    <input type="text" placeholder="" maxlength="10" onkeypress="controla_digitacion_decimal (event, this, 0);" numbers-only ng-model="$parent.GlbUsuario.usuarioCelular" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <label>Referencia</label>
+                    <textarea class="form-control" ng-model="$parent.GlbUsuario.usuarioDireccionReferencia">{{ $parent.GlbUsuario.usuarioDireccionReferencia }}</textarea>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- cargas familiareds -->
+    <div class="wizard-card" data-cardname="group">
+        <h3>Cargas Familiares</h3>
+
+        <div style="overflow: auto;height: 350px;position: relative">
+            <div class="col-md-12 col-sm-12">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">¿Tiene cargas familiares?</label>
+                    <div class="col-sm-6 xs-pt-5">
+                        <div class="switch-button switch-button-yesno">
+                            <input type="checkbox" checked="" name="swt9" id="swt9" ng-model="$parent.checkCargas"><span>
+                                                <label for="swt9"></label></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12" ng-repeat="item in $parent.GlbUsuario.cargasfamiliares" ng-model="cargas" on-finish-render="initPicker()" ng-hide="item.acc=='E' || !$parent.checkCargas">
+                    <div class="panel panel-default" style="margin-bottom:-10px;">
+                        <div class="panel-heading">
+                            <div class="tools"><a ng-click="$parent.eliminarCarga($index)"><span class="icon s7-trash text-danger"></span></a></div><span class="title text-info"><b>Carga Familiar No. {{ ($index+1) }}</b></span></div>
+                        <div class="panel-body">
+                            <input type="hidden" placeholder="" ng-model="item.cargaFamiliarCodigo" class="form-control">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Cédula</label>
+                                    <input type="text" placeholder="" maxlength="10" onkeypress="controla_digitacion_decimal (event, this, 0);" ng-model="item.cargaFamiliarCedula" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Nombres</label>
+                                    <input type="text" placeholder="" maxlength="60" ng-model="item.cargaFamiliarNombres" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Apellidos</label>
+                                    <input type="text" placeholder="" maxlength="60" ng-model="item.cargaFamiliarApellidos" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Sexo</label>
+                                    <select ng-model="item.cargaFamiliarSexo" class="form-control">
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Parentesco</label>
+                                    <select ng-model="item.cargaFamiliarParentesco" class="form-control">
+                                        <option value="H">Hijo</option>
+                                        <option value="C">Cónyuge</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Fecha de Nacimiento</label>
+
+                                    <!--<div data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" class="input-group date datetimepicker col-md-12 col-xs-7">-->
+                                    <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker col-md-12 col-xs-12">
+                                        <span class="input-group-addon btn btn-primary"><i class="icon-th s7-date"></i></span><input size="12" type="text" ng-model="item.cargaFamiliarFechaNacimiento" value="{{ item.cargaFamiliarFechaNacimiento | limitTo:10 }}"
+                                            readonly="" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Extranjero</label>
+                                    <select ng-model="item.cargaFamiliarExterno" class="form-control">
+                                        <option value="S">Sí</option>
+                                        <option value="N">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Conadis</label>
+                                    <select ng-model="item.cargaFamiliarDiscapacidad" class="form-control">
+                                        <option value="S">Sí</option>
+                                        <option value="N">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 spacer " ng-hide="!$parent.checkCargas">
+                <button type="button" ng-click="$parent.addCarga()" class="btn btn-space btn-primary">Añadir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- contacto emergencia -->
+    <div class="wizard-card wizard-card-overlay" data-cardname="services">
+        <h3>Contacto Emergencia</h3>
+
+        <div style="overflow: auto;height: 350px;position: relative">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioContactoNombre1" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioContactoApellido1" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Parentesco</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioContactoParentesco" class="form-control">
+                        <option value="P">Padre</option>
+                        <option value="M">Madre</option>
+                        <option value="H">Hermano</option>
+                        <option value="I">Hijo</option>
+                        <option value="T">Tio</option>
+                        <option value="R">Primo</option>
+                        <option value="S">Sobrino</option>
+                        <option value="A">Amigo</option>
+                        <option value="C">Cónyuge</option>
+                        <option value="O">Otro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>E-mail Personal</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioContactoEmail" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Tipo de Vivienda</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioContactoTipoVivienda" class="form-control">
+                        <option value="C">Casa</option>
+                        <option value="D">Departamento</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Ubicada en</label>
+                    <select ng-model="$parent.GlbUsuario.usuarioContactoUbicacionVivienda" class="form-control">
+                        <option value="I">Independiente</option>
+                        <option value="C">Conjunto Habitacional</option>
+                        <option value="U">Urbanización</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Calle Principal</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioContactoDireccionPrincipal" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Número</label>
+                    <input type="text" placeholder="" maxlength="10" ng-model="$parent.GlbUsuario.usuarioContactoDireccionNumero" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Calle Secundaria</label>
+                    <input type="text" placeholder="" maxlength="120" ng-model="$parent.GlbUsuario.usuarioContactoDireccionSecundaria" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Piso</label>
+                    <input type="text" placeholder="" maxlength="10" ng-model="$parent.GlbUsuario.usuarioContactoDireccionPiso" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Teléfono Fijo</label>
+                    <input type="text" placeholder="" maxlength="9" onkeypress="controla_digitacion_decimal (event, this, 0);" ng-model="$parent.GlbUsuario.usuarioContactoTelefono1" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Teléfono Celular</label>
+                    <input type="text" placeholder="" maxlength="10" onkeypress="controla_digitacion_decimal (event, this, 0);" ng-model="$parent.GlbUsuario.usuarioContactoTelefono2" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <label>Referencia</label>
+                    <textarea class="form-control" ng-model="$parent.GlbUsuario.usuarioContactoDireccionReferencia">{{ $parent.GlbUsuario.usuarioContactoDireccionReferencia }}</textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- perfil del empleado -->
+    <div class="wizard-card wizard-card-overlay" data-cardname="perfil">
+        <h3>Perfil</h3>
+
+        <div style="overflow: auto;height: 350px;position: relative">
+            <div class="col-md-12 col-sm-12" style="height: 100%">
+                <iframe class="col-md-12 col-sm-12" style="height: 100%;border:0" src="{{ $parent.urlPerfilEmpleado | trusted}}"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- password -->
+    <div class="wizard-card wizard-card-overlay" data-cardname="location" ng-if="$parent.GlbUsuario.usuarioCodigoCampana==0">
+        <h3>Password</h3>
+
+        <div class="wizard-input-section">
+
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label>Nuevo Password</label>
+                    <input type="password" maxlength="15" ng-model="$parent.GlbUsuario.usuarioPassword" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label>Confirmar Password</label>
+                    <input type="password" maxlength="15" placeholder="" ng-model="$parent.GlbUsuario.actualizaPassword" class="form-control">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="wizard-success">
+        <div class="alert alert-success">
+            <span class="create-server-name"></span>Datos actualizados <strong>satisfactoriamente.</strong>
+        </div>
+
+        <!--<a class="btn btn-default create-another-server">Create another server</a>
+        <span style="padding:0 10px">or</span>-->
+        <a class="btn btn-success im-done">Listo</a>
+    </div>
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.fn.wizard.logging = true;
+
+        /*var wizard = $('#satellite-wizard').wizard({
+            keyboard: false,
+            contentHeight: 500,
+            contentWidth: 1200,
+            backdrop: 'static'
+        });*/
+
+
+
+
+
+        /*$('#fqdn').on('input', function () {
+            if ($(this).val().length != 0) {
+                $('#ip').val('').attr('disabled', 'disabled');
+                $('#fqdn, #ip').parents('.form-group').removeClass('has-error has-success');
+            } else {
+                $('#ip').val('').removeAttr('disabled');
+            }
+        });*/
+
+        var pattern = /\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
+        x = 46;
+
+        /*$('#ip').on('input', function () {
+            if ($(this).val().length != 0) {
+                $('#fqdn').val('').attr('disabled', 'disabled');
+            } else {
+                $('#fqdn').val('').removeAttr('disabled');
+            }
+        }).keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && e.which != x && (e.which < 48 || e.which > 57)) {
+                console.log(e.which);
+                return false;
+            }
+        }).keyup(function () {
+            var $this = $(this);
+            if (!pattern.test($this.val())) {
+                //$('#validate_ip').text('Not Valid IP');
+                console.log('Not Valid IP');
+                $this.parents('.form-group').removeClass('has-error has-success').addClass('has-error');
+                while ($this.val().indexOf("..") !== -1) {
+                    $this.val($this.val().replace('..', '.'));
+                }
+                x = 46;
+            } else {
+                x = 0;
+                var lastChar = $this.val().substr($this.val().length - 1);
+                if (lastChar == '.') {
+                    $this.val($this.val().slice(0, -1));
+                }
+                var ip = $this.val().split('.');
+                if (ip.length == 4) {
+                    //$('#validate_ip').text('Valid IP');
+
+                    $this.parents('.form-group').removeClass('has-error').addClass('has-success');
+                }
+            }
+        });*/
+
+        /*wizard.on('closed', function () {
+            wizard.reset();
+        });
+
+        wizard.on("reset", function () {
+            wizard.modal.find(':input').val('').removeAttr('disabled');
+            wizard.modal.find('.form-group').removeClass('has-error').removeClass('has-succes');
+            wizard.modal.find('#fqdn').data('is-valid', 0).data('lookup', 0);
+        });
+
+        wizard.on("submit", function (wizard) {
+            var submit = {
+                "hostname": $("#new-server-fqdn").val()
+            };
+
+            this.log('seralize()');
+            this.log(this.serialize());
+            this.log('serializeArray()');
+            this.log(this.serializeArray());
+
+            setTimeout(function () {
+                wizard.trigger("success");
+                wizard.hideButtons();
+                wizard._submitting = false;
+                wizard.showSubmitCard("success");
+                wizard.updateProgressBar(0);
+            }, 2000);
+        });
+
+        wizard.el.find(".wizard-success .im-done").click(function () {
+            wizard.hide();
+            setTimeout(function () {
+                wizard.reset();
+            }, 250);
+
+        });
+
+        wizard.el.find(".wizard-success .create-another-server").click(function () {
+            wizard.reset();
+        });
+
+        $(".wizard-group-list").click(function () {
+            alert("Disabled for demo.");
+        });
+
+        $('#open-wizard').click(function (e) {
+            e.preventDefault();
+            wizard.show();
+        });
+*/
+
+        //wizard.show();
+    });
+
+    function validateServerLabel(el) {
+        var name = el.val();
+        var retValue = {};
+
+        if (name == "") {
+            retValue.status = false;
+            retValue.msg = "Please enter a label";
+        } else {
+            retValue.status = true;
+        }
+
+        return retValue;
+    };
+
+    function validateFQDN(el) {
+        var $this = $(el);
+        var retValue = {};
+
+        if ($this.is(':disabled')) {
+            // FQDN Disabled
+            retValue.status = true;
+        } else {
+            if ($this.data('lookup') === 0) {
+                retValue.status = false;
+                retValue.msg = "Preform lookup first";
+            } else {
+                if ($this.data('is-valid') === 0) {
+                    retValue.status = false;
+                    retValue.msg = "Lookup Failed";
+                } else {
+                    retValue.status = true;
+                }
+            }
+        }
+
+        return retValue;
+    };
+
+    function lookup() {
+        // Normally a ajax call to the server to preform a lookup
+        $('#fqdn').data('lookup', 1);
+        $('#fqdn').data('is-valid', 1);
+        $('#ip').val('127.0.0.1');
+    };
+</script>

@@ -1,0 +1,1498 @@
+<div class="user-profile">
+    <!-- partial de usuarios -->
+    <!--<header-user dashboard-item="S"></header-user>-->
+    <!-- crea la primera linea de informacion -->
+    <div class="row">
+
+        <!-- seccion informativa -->
+        <div class="col-md-6 col-lg-4">
+            <!-- comunicaciones -->
+            <div class="panel panel-default">
+                <div class="panel-heading">Comunicaciones</div>
+                <div class="panel-body">
+                    <div ng-repeat="item in comunicaciones" style="padding-bottom: 10px" ng-show="comunicaciones">
+                        <strong ng-click="showComu(item)" style="cursor: pointer">{{ item.comunicacionAsunto }}</strong>
+                        <br>
+                        <hm-read hmtext="{{ item.comunicacionTexto }}" hmlimit="100" hm-more-text="" hm-less-text="read less"></hm-read>
+                        <br>
+                    </div>
+
+                    <div class="row panel-info" ng-show="comunicaciones">
+                        <div class="col-xs-4">
+                            <span class="title">Total</span>
+                            <span data-toggle="counter" data-end="180" class="number" ng-repeat="item in statsComunicaciones | filter:{codigo:1}">{{ item.valor }}</span>
+                        </div>
+                        <div class="col-xs-4">
+                            <span class="title">Nuevas</span>
+                            <span data-toggle="counter" data-end="180" class="number" ng-repeat="item in statsComunicaciones | filter:{codigo:2}">{{ item.valor }}</span>
+                        </div>
+                        <div class="col-xs-4">
+                            <span class="title">Sin ver</span>
+                            <span data-toggle="counter" data-end="180" class="number" ng-repeat="item in statsComunicaciones | filter:{codigo:4}">{{ item.valor }}</span>
+                        </div>
+                    </div>
+
+                    <div class="icon-container" ng-show="!comunicaciones">
+                        <div class="icon"><span class="s7-attention"></span></div><span class="class">No tiene comunicaciones.</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- calendario -->
+            <widget-calendario data="{{ calendario }}"></widget-calendario>
+
+        </div>
+
+        <!-- Capacitaciones -->
+        <div class="col-md-8" ng-show="($parent.capacitaciones | keylength)>0">
+
+            <div class="panel panel-default" style="max-height: 250px;position: relative;">
+
+                <div class="panel-heading">Cursos Capacitación</div>
+                <div class="panel-body" style="width:100%;overflow: visible;height: 190px">
+
+                    <div class="row am-scroller nano">
+
+                        <div class="nano-content">
+                            <div class="content">
+                                <!-- array evaluados -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item in $parent.capacitaciones">
+                                    <div class="col-md-5 col-xs-8" style="padding-left:20px;">
+                                        <span><b>{{ item.capacitacionRealTema | getNombrePropio:false}}</b></span><br>
+                                        <span>{{ item.capacitacionRealDuracion }} horas</span></br>
+                                        <span class="text-danger">{{ item.areaTemaNombre | getNombrePropio:false }}</span>
+                                    </div>
+                                    <div class="col-md-5 text-center hidden-xs">
+                                        <span><b>Desde:</b> {{ item.capacitacionRealFechaInicio | limitTo:10 }}</span><br>
+                                        <span><b>Hasta:</b> {{ item.capacitacionRealFechaFin | limitTo:10 }}</span><br>
+                                    </div>
+                                    <div class="col-md-2 col-xs-2 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <button data-modal="colored-info" class="btn btn-alt3 md-trigger" ng-hide="item_1.evaluacionEstado=='F'" ng-click="showCapaEval(item)">Evaluar</button>
+                                        <a style="font-size: 34px" class="text-success s7-note2" ng-click="showInforme(item,item_1)" ng-show="item_1.evaluacionInforme=='S'"></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- gadget elearning -->
+        <div class="col-md-8" ng-show="($parent.elearning | keylength)>0">
+
+            <div class="panel panel-default" style="min-height: 300px;position: relative;">
+
+                <div class="panel-heading">Cursos de e-Learning</div>
+                <div class="panel-body" style="width:100%;overflow: visible;height: 313px">
+
+                    <div class="row am-scroller nano">
+
+                        <div class="nano-content">
+                            <div class="content">
+                                <!-- array evaluados -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item in $parent.elearning | orderBy:'tip_evaluacion'">
+                                    <div class="col-md-5 col-xs-8" style="padding-left:20px;">
+                                        <span><b>{{ item.capacitacionVirtualTema | getNombrePropio:false}}</b></span><br>
+                                        <span>{{ item.capacitacionVirtualDescripcion | getNombrePropio:false }}</span></br>
+
+                                    </div>
+
+                                    <div class="col-md-2 text-center hidden-xs" ng-show="item.tip_evaluacion=='C'">
+                                        <span>{{ item.num_capitulo }}</span><br>
+                                        <span><b>Capítulos</b></span></br>
+                                    </div>
+
+                                    <div class="col-md-2 text-center hidden-xs" ng-show="item.tip_evaluacion=='C'">
+                                        <span>{{ item.num_totausuarios }}</span><br>
+                                        <span><b>Alumnos</b></span></br>
+                                    </div>
+
+                                    <div class="col-md-2 text-center hidden-xs" ng-show="(item.tip_evaluacion=='E' || item.tip_evaluacion=='F') && item.est_evaluacionusuario=='A'">
+                                        <span>{{ item.evaluacionVirtualNumePregExamen }}</span><br>
+                                        <span><b>Preguntas</b></span></br>
+                                    </div>
+
+                                    <div class="col-md-2 text-center hidden-xs" ng-show="(item.tip_evaluacion=='E' || item.tip_evaluacion=='F') && item.est_evaluacionusuario=='F'">
+                                        <span class="chart" chartgraf size="70" color="{{ item.apr_evaluacionusuario=='N'?'#FF0000':'#008000' }}" data-percent="{{ item.res_evaluacionusuario | num }}" style="margin-top: 0px;height: 80px">
+                                            <span class="percent" style="left: 23%;top: -27%;">{{ item.res_evaluacionusuario | num }}%</span>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="col-md-2 text-center hidden-xs" ng-show="item.tip_evaluacion=='E' || item.tip_evaluacion=='F'">
+                                        <span>{{ item.num_finausuarios }} / {{ item.num_totausuarios }}</span><br>
+                                        <span><b>Alumnos<br>evaluados</b></span></br>
+                                    </div>
+                                    <!--<div class="col-md-5 text-center hidden-xs">
+                                        <span><b>Desde:</b> {{ (item.elearningEstado_FUNC=='X')?(item.examenFechaInicio | limitTo:10):(item.estudioFechaInicio | limitTo:10) }}</span><br>
+                                        <span><b>Hasta:</b> {{ (item.elearningEstado_FUNC=='X')?(item.examenFechaFin | limitTo:10):(item.estudioFechaFin | limitTo:10) }}</span><br>
+                                    </div>-->
+                                    <div class="col-md-3 col-xs-3 text-center" style="padding: 8px 0px 0px 0px;" ng-if="item.est_evaluacionusuario=='A'">
+                                        <button data-modal="colored-info" class="btn btn-alt3 md-trigger" ng-click="showLearEval(item)" ng-show="item.tip_evaluacion=='E'">Evaluar</button>
+                                        <a style="font-size: 34px" class="text-success s7-note2" ng-click="showInfoCapi(item)" ng-show="item.tip_evaluacion=='C'"></a>
+                                    </div>
+
+                                    <div class="col-md-3 text-center hidden-xs" style="padding-top:15px;" ng-if="item.est_evaluacionusuario=='F'">
+                                        <span ng-class="item.apr_evaluacionusuario=='N'?'text-danger':'text-success'">{{ (item.apr_evaluacionusuario=='A'?'Aprobado':'No aprobado')  }}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- evaluaciones objetivos,etc -->
+        <div class="col-md-8" ng-if="$parent.alias=='desarrollo'">
+
+            <!--<div class="panel panel-default" style="min-height: 400px;position: relative;" ng-repeat="item in GlbUsuario.evaluaciones">-->
+            <div class="panel panel-default" style="min-height: 100px;position: relative;" ng-repeat="item in evalauciones_grupo | pick:'estadoEvaluacionUsuario!=\'F\'' | orderBy:'-evaluados'">
+
+                <div class="panel-heading">{{ item.evaluacionTipo | getNombrePropio:false }} - {{ item.evaluacionFechaCreacion | limitTo:7 | limitTo:-2 | nombremes}} {{ item.evaluacionFechaCreacion | limitTo:10 | limitTo:4}}
+                </div>
+                <div class="panel-body" style="width:100%;overflow: auto;min-height: 100px;max-height: 273px">
+
+                    <!-- array evaluados -->
+                    <div class="col-md-12 col-xs-12" style="padding:10px 10px 20px 0px;" ng-repeat="item_1 in item.evaluados">
+
+                        <div class="col-md-1 col-xs-1 text-center" style="padding-top:5px; border: solid 0px #000000; height:60px;">
+                            <img src="/assets/img/avatar_f.jpg?v=20170309095723" style="border-radius:50%; width:50px; height:50px">
+                        </div>
+
+                        <div class="col-md-6 col-xs-6" style="padding-top:0px; border: solid 0px #000000; height:60px;">
+                            <span><b>{{ (item_1.usuarioNombre1 + ' ' + item_1.usuarioApellido1) | getNombrePropio:false }}</b></span><br>
+                            <span>{{ item_1.cargoNombre | getNombrePropio:false }}</span><br>
+                            <span class="text-danger" ng-if="item.capacitacionUsuario=='PP'">{{ item_1.relacionNombre }}</span>
+                            <span class="text-danger" ng-if="item.capacitacionUsuario!='PP'">5 objetivos</span>
+                        </div>
+
+                        <!-- <div class="col-lg-3 col-md-3 col-sm-3 text-center" ng-if="item.capacitacionUsuario!='PP'">
+                            <span class="chart" chartgraf data-percent="0">
+                                <span class="percent">0%</span>
+                            </span>
+                        </div> -->
+
+                        <div class="col-md-3 col-xs-3 text-center" style="padding-top:20px; border: solid 0px #000000; height:60px;"><!-- ng-if="item.capacitacionUsuario=='PP'" -->
+                            <span ng-class="item_1.evaluacionEstado=='P'?'text-danger':item_1.evaluacionEstado=='F'?'text-danger':item_1.evaluacionEstado=='A'?'text-success':''">{{ item_1.evaluacionEstado | evaluacionestado }}</span>
+                        </div>
+
+                        <!-- para objetivos -->
+                        <div class="col-md-2 col-xs-2 text-center" style="padding-top:10px; border: solid 0px #000000; height:60px;" ng-if="item_1.estadoEvaluacionUsuario=='A' && item_1.tipoEvaluacionUsuario=='OB'">
+                            <button data-modal="colored-info" class="btn btn-primary" style="width:90px;" ng-click="regitsraObjetivos(item_1)">Registrar</button>
+                        </div>
+                        <div class="col-md-2 col-xs-2 text-center" style="padding-top:10px; border: solid 0px #000000; height:60px;" ng-if="item_1.estadoEvaluacionUsuario=='R' && item_1.tipoEvaluacionUsuario=='OB'">
+                            <button data-modal="colored-info" class="btn btn-alt3 md-trigger" style="width:90px;" ng-click="evaluarObjetivos(item_1)">Evaluar</button>
+                        </div>
+
+                        <!-- para otro tipo de evaluaciones -->
+                        <div class="col-md-2 col-xs-2 text-center" style="padding-top:10px; border: solid 0px #000000; height:60px;" ng-if="item.capacitacionUsuario=='PP'">
+                            <button data-modal="colored-info" class="btn btn-alt3 md-trigger" style="width:90px;" ng-hide="item_1.evaluacionEstado=='F'" ng-click="recuperaEvaluacion(item_1,item)">Evaluar</button>
+                            <a style="font-size: 34px" class="text-success s7-note2" ng-click="showInforme(item,item_1)" ng-show="item_1.evaluacionInforme=='S'"></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- evaluaciones pendientes -->
+        <div class="col-md-8" ng-show="(GlbUsuario.evaluaciones | keylength)>0">
+
+            <div class="panel panel-default" style="min-height: 400px;position: relative;" ng-repeat="item in GlbUsuario.evaluaciones">
+
+                <div class="panel-heading">{{ item.tipoevaluacionNombre | getNombrePropio:false }} - {{ item.evaluacionFechaCreacion | limitTo:7 | limitTo:-2 | nombremes}} {{ item.evaluacionFechaCreacion | limitTo:10 | limitTo:4}}</div>
+                <div class="panel-body" style="width:100%;overflow: visible;height: 500px">
+
+                    <div class="row am-scroller nano">
+
+                        <div class="nano-content">
+                            <div class="content">
+                                <!-- array evaluados -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item_1 in item.evaluados | orderBy:'evaluacionEstado'">
+                                    <div class="col-md-1 col-xs-2 text-center" style="padding: 0px;">
+                                        <img ng-src="{{ item_1.usuarioFoto | getValidaImagen:'U'}}" style="border-radius: 50%;width: 50px;height: 50px">
+                                    </div>
+                                    <div class="col-md-6 col-xs-8" style="padding-left:20px;">
+                                        <span><b>{{ item_1.usuarioNombre1 + ' ' + item_1.usuarioNombre2 + ' ' + item_1.usuarioApellido1 + ' ' + item_1.usuarioApellido2 | getNombrePropio:true}}</b></span><br>
+                                        <span>{{ item_1.cargoNombre | getNombrePropio:true }}</span></br>
+                                        <span class="text-danger">{{ item_1.relacionNombre | getNombrePropio:true }}</span>
+                                    </div>
+                                    <div class="col-md-3 text-center hidden-xs" style="padding-top:15px;">
+                                        <span ng-class="item_1.evaluacionEstado=='P'?'text-danger':item_1.evaluacionEstado=='F'?'text-danger':item_1.evaluacionEstado=='A'?'text-success':''">{{ item_1.evaluacionEstado | evaluacionestado }}</span>
+                                    </div>
+                                    <div class="col-md-2 col-xs-2 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <button data-modal="colored-info" class="btn btn-alt3 md-trigger" ng-hide="item_1.evaluacionEstado=='F'" ng-click="recuperaEvaluacion(item_1,item)">Evaluar</button>
+                                        <a style="font-size: 34px" class="text-success s7-note2" ng-click="showInforme(item,item_1)" ng-show="item_1.evaluacionInforme=='S'"></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-lg-{{ ((metricas | keylength)==0?8:(evalauciones_grupo | keylength)==0?4:6) }}" ><!-- ng-show="(evalauciones_grupo | keylength)==0" -->
+
+            <!-- cumpleanieros -->
+            <div class="panel panel-default" ng-style="((aniversario|filter:{departamentoCodigo:GlbUsuario.departamentoCodigo}|keylength)==0) ? {'min-height': '754px', 'max-height': '754px'} : {'min-height': '450px','max-height': '450px'}">
+
+                <div class="panel-heading">Cumpleañeros del mes</div>
+                <div class="panel-body">
+
+                    <!-- botones filtro -->
+                    <div class="row text-center" ng-show="(cumpleaneros|keylength)>0">
+                        <button class="btn" style="width:43%; display:inline;" ng-class="area=='S'?'btn-primary':'btn-default'" ng-click="cambiaCump('A')">Mi Area</button>
+                        <button class="btn" style="width:43%; display:inline;" ng-class="area=='N'?'btn-primary':'btn-default'" ng-click="cambiaCump('E')">Mi Empresa</button>
+                    </div>
+                    </br>
+
+                    <div class="row am-scroller nano" style="position:absolute; width:90%;" ng-style="((aniversario|filter:{departamentoCodigo:GlbUsuario.departamentoCodigo}|keylength)==0) ? {'height':'585px'} : {'height':'300px'}">
+                        <div class="nano-content">
+                            <div class="content">
+
+                                <!-- array cumpleañeros del area -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item in cumpleaneros  | filter:{departamentoCodigo:GlbUsuario.departamentoCodigo} | orderBy:['(usuarioFechaNacimiento  | limitTo:7 | limitTo:-2)','(usuarioFechaNacimiento  | limitTo:10 | limitTo:-2)']"
+                                    ng-show="area=='S' && (cumpleaneros|keylength)>0">
+                                    <div class="col-md-2 col-xs-2 text-center" style="padding: 0px;">
+                                        <img ng-src="{{ item.usuarioFoto | getValidaImagen:'U':item.usuarioSexo }}" style="border-radius: 50%;width: 50px;height: 50px">
+                                    </div>
+                                    <div class="col-md-8 col-xs-8" style="padding-top:6px;padding-left:20px;">
+                                        <span><b>{{ item.usuarioNick + ' ' + item.usuarioApellido1 | getNombrePropio:true}}</b></span><br>
+                                        <span class="text-info">{{ item.cargoNombre | getNombrePropio:false}}</span><b class="text-info">&nbsp;/&nbsp;</b><span class="text-info">{{ item.referenciaNombre | getNombrePropio:true}}</span><br>
+                                        <span>{{ item.usuarioFechaNacimiento | limitTo:7 | limitTo:-2 | nombremes}} {{ item.usuarioFechaNacimiento | limitTo:10 | limitTo:-2}}</span>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <span style="font-size:20px;color:green" class="iconmoon text-info icon-gift" ng-show="fechaDia==(item.usuarioFechaNacimiento | limitTo:10 | limitTo:-2)"></span>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <span style="cursor:pointer;font-size:20px;" ng-click="sendNotif(item)" class="iconmoon {{ item.usuariodeseocumple=='S'?'icon-star-full text-warning':'icon-star-empty' }}"></span>
+                                    </div>
+                                </div>
+
+                                <!-- array cumpleañeros empresa -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item in cumpleaneros | orderBy:['(usuarioFechaNacimiento  | limitTo:7 | limitTo:-2)','(usuarioFechaNacimiento  | limitTo:10 | limitTo:-2)']" ng-show="area=='N' && (cumpleaneros|keylength)>0">
+                                    <div class="col-md-2 col-xs-2 text-center" style="padding: 0px;">
+                                        <img ng-src="{{ item.usuarioFoto | getValidaImagen:'U':item.usuarioSexo }}" style="border-radius: 50%;width: 50px;height: 50px">
+                                    </div>
+                                    <div class="col-md-8 col-xs-8" style="padding-top:6px;padding-left:20px;">
+                                        <span><b>{{ item.usuarioNick + ' ' + item.usuarioApellido1 | getNombrePropio:true}}</b></span><br>
+                                        <span class="text-info">{{ item.cargoNombre | getNombrePropio:false}}</span><b class="text-info">&nbsp;/&nbsp;</b><span class="text-info">{{ item.referenciaNombre | getNombrePropio:true}}</span><br>
+                                        <span>{{ item.usuarioFechaNacimiento | limitTo:7 | limitTo:-2 | nombremes}} {{ item.usuarioFechaNacimiento | limitTo:10 | limitTo:-2}}</span>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <span style="font-size:20px;color:green" class="iconmoon text-info icon-gift" ng-show="fechaDia==(item.usuarioFechaNacimiento | limitTo:10 | limitTo:-2)"></span>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center" style="padding: 8px 0px 0px 0px;">
+                                        <span style="cursor:pointer;font-size:20px;" ng-click="sendNotif(item)" class="iconmoon {{ item.usuariodeseocumple=='S'?'icon-star-full text-warning':'icon-star-empty' }}"></span>
+                                    </div>
+                                </div>
+
+                                <!-- validacion cumpleañeros area empty-->
+                                <div class="icon-container" ng-show="(cumpleaneros  | filter:{departamentoCodigo:GlbUsuario.departamentoCodigo} | keylength)==0 && area=='S'">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No hay cumpleañeros del mes en tu área.</span>
+                                </div>
+
+                                <!-- validacion cumpleañeros empresa empty-->
+                                <div class="icon-container" ng-show="(cumpleaneros  | keylength)==0 && area=='N'">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No hay cumpleañeros del mes en tu empresa.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aniversario -->
+            <div class="panel panel-default" style="min-height: 450px; max-height: 450px;" ng-show="(aniversario|filter:{departamentoCodigo:GlbUsuario.departamentoCodigo}|keylength)>0">
+
+                <div class="panel-heading">Aniversario de trabajo</div>
+                <div class="panel-body">
+
+                    <!-- botones filtro -->
+                    <div class="row am-scroller nano" style="position:absolute; width:90%; height:300px;">
+                        <div class="nano-content">
+                            <div class="content">
+
+                                <!-- array cumpleañeros del area -->
+                                <div class="col-md-12 col-xs-12" style="padding:10px 10px;" ng-repeat="item in aniversario  | filter:{departamentoCodigo:GlbUsuario.departamentoCodigo} | orderBy:'(usuarioFechaNacimiento  | limitTo:10 | limitTo:-2)'" ng-show="(aniversario|keylength)>0">
+                                    <div class="col-md-2 col-xs-2 text-center" style="padding: 0px;">
+                                        <img ng-src="{{ item.usuarioFoto | getValidaImagen:'U':item.usuarioSexo }}" style="border-radius: 50%;width: 50px;height: 50px">
+                                    </div>
+                                    <div class="col-md-10 col-xs-10" style="padding-top:6px;padding-left:20px;">
+                                        <span><b>{{ item.usuarioNick + ' ' + item.usuarioApellido1 | getNombrePropio:true}}</b></span><br>
+                                        <span class="text-info">{{ item.cargoNombre | getNombrePropio:false}}</span><b class="text-info">&nbsp;/&nbsp;</b><span class="text-info">{{ item.referenciaNombre | getNombrePropio:true}}</span><br>
+                                        <span>{{ item.usuarioFechaIngreso | limitTo:7 | limitTo:-2 | nombremes}} {{ item.usuarioFechaIngreso | limitTo:10 | limitTo:-2}} - {{ item.usuarioAniosTrabajando_FUNC}} años</span>
+                                    </div>
+                                </div>
+
+
+                                <!-- validacion cumpleañeros area empty-->
+                                <div class="icon-container" ng-show="(aniversario  | filter:{departamentoCodigo:GlbUsuario.departamentoCodigo} | keylength)==0 ">
+                                    <div class="icon"><span class="s7-attention"></span></div><span class="class">No hay cumpleañeros del mes en tu área.</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- metricas -->
+        <div class="col-md-6 col-lg-{{ ((metricas | keylength)==0?8:(evalauciones_grupo | keylength)==0?4:6) }}" ><!-- ng-show="(evalauciones_grupo | keylength)==0" -->
+
+            <!-- metricas -->
+            <div class="panel panel-default" ng-repeat="item in metricas">
+
+				<div class="panel-heading"> {{ item.metricaNombre + ' - ' + item.metricaEvaluacionNombre | getNombrePropio:false}}</div>
+                <div class="panel-body">                   				
+
+                    <!-- botones filtro -->
+                    <div class="row text-center">
+                        <button class="btn" style="width:43%; display:inline;" ng-class="item.isTab=='2'?'btn-primary':'btn-default'" ng-click="changeTab(item)">Mi Area</button>
+                        <button class="btn" style="width:43%; display:inline;" ng-class="item.isTab=='1'?'btn-primary':'btn-default'" ng-click="changeTab(item)">Mi Usuario</button>
+                    </div>
+                    </br>
+
+                    <!-- Metrica usuario -->
+                    <div class="col-md-12" ng-repeat="item_1 in item.groupfactores" ng-show="item.isTab==1 && !item.metricaUrl">
+                        <div class="col-md-6 text-center" style="padding-bottom:15px;" ng-repeat="item_2 in item_1">
+                            <span class="chart" style="width: 80px; height:90px;" chartgraf data-color="{{ item_2.metricaFactorColor }}" data-percent="{{ (item_2.metricaFactorValorUsuario*100)/item_2.metricaFactorValor }}">
+								<span class="percent" style="width: 80px; left:0px; line-height: 100px;">{{ item_2.metricaFactorValorUsuario | number:1 }}</span>
+                            </span><br>
+                            <span>{{ item_2.metricaFactorNombre | getNombrePropio:false }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Metrica departamento -->
+                    <div class="col-md-12" ng-repeat="item_1 in item.groupfactores" ng-show="item.isTab==2 && item.groupfactores">
+                        <div class="col-md-6 text-center" style="padding-bottom:15px;" ng-repeat="item_2 in item_1">
+                            <span class="chart" style="width: 80px; height:90px;" chartgraf data-color="{{ item_2.metricaFactorColor }}" data-percent="{{ (item_2.metricaFactorValorDepartamento*100)/item_2.metricaFactorValor }}">
+                                <span class="percent" style="width: 80px; left:0px; line-height: 100px;">{{ item_2.metricaFactorValorDepartamento | number:1 }}</span>
+                            </span><br>
+                            <span>{{ item_2.metricaFactorNombre | getNombrePropio:false }}</span>
+                        </div>
+                    </div>
+
+                    <div class="icon-container col-sm-12" style="margin-top: 15px" ng-show="item.isTab==1 && item.metricaUrl">
+                        <a href="{{ item.metricaUrl }}" target="_blank">
+                            <div style="padding-bottom: 15px"><img ng-src="{{ item.ico_metrica }}?v={{rand}}" style="width: 100px" /></div><span class="text-muted">Para ingresar a tu información personal, haz click en el icono.</span>
+						</a>
+                    </div>
+
+                    <br>
+                    <div class="col-sm-12 text-center" style="padding: 30px 0 0 0;" ng-hide="metricas">
+                        <span class="text-warning">No existen resultados de evaluación ingresados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desempenio por Competencias Organizacionales -->
+        <!--<div class="widget widget-radar">
+            <div class="widget-head">
+                <div class="tools"><span class="icon s7-upload"></span></div><span class="title">Evaluación Valores Corporativos</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="radar-chart1" height="180px"></canvas>
+            </div>
+        </div>-->
+
+        <!-- Desempenio por Competencias Especificas -->
+        <!--<div class="widget widget-fullwidth widget-small">
+            <div class="widget-head">
+                <div class="tools"><span class="value">3.7</span></div><span class="title">Evaluación Competencias Específicas</span>
+            </div>
+            <div class="chart-container">
+                <div id="barchart-mini1" style="height: 150px;"></div>
+            </div>
+            <table class="table table-striped table-fw-widget table-hover">
+                <thead>
+                <tr>
+                    <th>Competencia</th>
+                    <th class="number">Valor</th>
+                </tr>
+                </thead>
+                <tbody class="no-border-x">
+                <tr>
+                    <td>Iniciativa</td>
+                    <td class="number">1.5</td>
+                </tr>
+                <tr>
+                    <td>Escucha y Dialogo</td>
+                    <td class="number">1.5</td>
+                </tr>
+                <tr>
+                    <td>Tezon</td>
+                    <td class="number">1.9</td>
+                </tr>
+                <tr>
+                    <td>Afabilidad</td>
+                    <td class="number">2.8</td>
+                </tr>
+                <tr>
+                    <td>Energia</td>
+                    <td class="number">3.0</td>
+                </tr>
+                <tr>
+                    <td>Perseverancia</td>
+                    <td class="number">3.5</td>
+                </tr>
+                <tr>
+                    <td>Trabajo en Equipo</td>
+                    <td class="number">3.8</td>
+                </tr>
+                <tr>
+                    <td>Trabajo bajo Presion</td>
+                    <td class="number">2.6</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>-->
+
+
+
+    </div>
+
+</div>
+
+
+<div id="colored-info" class="md-modal colored-header success full-width md-effect-5" stye="z-index:3000;">
+
+    <!-- evaluaciones -->
+    <form ng-submit="guardaevaluacion()" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2" id="formEval1">
+        <div class="md-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+                <h3 class="modal-title">{{ selectEvalEva.evaluacionTipo | getNombrePropio:false }} - {{ selectEvalEva.evaluacionFechaCreacion | limitTo:7 | limitTo:-2 | nombremes}} {{ selectEvalEva.evaluacionFechaCreacion | limitTo:10 | limitTo:4}}</h3>
+            </div>
+
+            <div class="modal-body evlahei" style="overflow-y: scroll;-webkit-overflow-scrolling: touch;">
+
+                <div class="list-group tickets" id="header">
+                    <div class="list-group-item" href="#" style="overflow: hidden;margin-bottom: 10px;background: #F2F2F2;border-radius: 4px;border: 0;">
+                        <div class="col-sm-12 col-md-12">
+                            <img class="avatar" id="avatar" style="width: 68px;height: 68px" ng-src="{{ (selectUsuaEva.usuarioFoto | getValidaImagen:'U' ) }}?v={{rand}}">
+
+                            <div class="col-md-9" style="padding-left:20px;">
+                                <span><b>{{ selectUsuaEva.usuarioNombre1 + ' ' + selectUsuaEva.usuarioNombre2 + ' ' + selectUsuaEva.usuarioApellido1 + ' ' + selectUsuaEva.usuarioApellido2 | getNombrePropio:true}}</b></span><br>
+                                <span>{{ selectUsuaEva.cargoNombre | getNombrePropio:true }}</span><br>
+                                <span class="text-danger">{{ selectUsuaEva.relacionNombre }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8" style="top:16px">
+                            <span class="pull-right">
+                                <div class="fact-data text-right">
+                                    <!--<h3 id="resultado" class="ng-binding">Nivel de Habilidad: Logrado</h3>-->
+                                </div>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Comepetencias -->
+                <!--<h4 class="text-warning">Competencias</h4>-->
+                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>1. COMPETENCIAS</strong><br>Las siguientes competencias han sido seleccionadas como primordiales y necesarias en la gestión de un líder MT, y se han segmentado en diferentes comportamientos dónde se puede apreciar de mejor
+                        manera la competencia. Por favor dar una calificación a cada comportamiento del evaluado de acuerdo a la tabla que se encuentra a continuación.<br>
+
+                    </div>
+                </div>
+                <!-- Competencias -->
+                <div class="row" style="margin: 0px 0px 0px 0px" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2">
+
+                    <div class="col-md-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 20px 15px;">
+                        <div class="col-md-6 hidden-xs">Competencia</div>
+                        <div class="col-md-2 hidden-xs">Conducta</div>
+
+                        <div class="col-md-1 text-center text-danger hidden-xs">Deficiente</div>
+                        <div class="col-md-1 text-center hidden-xs">Aceptable</div>
+                        <div class="col-md-1 text-center hidden-xs">Bueno</div>
+                        <div class="col-md-1 text-center hidden-xs">Excelente</div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0px 0px 0px 0px" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2">
+                    <div class="col-md-12 col-xs-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 20px 15px;" ng-repeat="item in evaluacion.competencias">
+                        <div class="col-md-6 col-xs-12" style="font-size: 12px">
+                            <b class="text-info">{{ item.competenciaNombre }}</b><br> {{ item.competenciaDescripcion }}<br>
+
+                        </div>
+                        <div style="font-size: 12px" class="col-md-2 hidden-xs">{{ item.competenciaConductas }}</div>
+
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.competenciaValorObtenido" value="1" name="com_{{ item.competenciaCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="text-danger">Deficiente</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.competenciaValorObtenido" value="2" name="com_{{ item.competenciaCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="">Aceptable</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.competenciaValorObtenido" value="3" name="com_{{ item.competenciaCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="">Bueno</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.competenciaValorObtenido" value="4" name="com_{{ item.competenciaCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="">Excelente</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Competencias END -->
+
+                <br><br>
+
+                <!-- 2 funciones del cargo -->
+                <div role="alert" class="alert alert-info alert-icon alert-dismissible" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>2. FUNCIONES</strong><br>Las siguientes funciones han sido seleccionadas como funciones primordiales que rigen el objetivo a cumplir del cargo que se menciona en el encabezado. Por favor dar una calificación al cumplimiento
+                        de cada función que realiza el evaluado de acuerdo a la tabla que se encuentra a continuación.<br>
+
+                    </div>
+                </div>
+
+                <div class="row" style="margin: 0px 0px 0px 0px" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2">
+
+                    <div class="col-md-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 20px 15px;">
+                        <div class="col-md-7 hidden-xs">Función</div>
+
+                        <div class="col-md-1 text-info hidden-xs">No Aplica</div>
+                        <div class="col-md-1 text-center text-danger hidden-xs">Deficiente</div>
+                        <div class="col-md-1 text-center hidden-xs">Aceptable</div>
+                        <div class="col-md-1 text-center hidden-xs">Bueno</div>
+                        <div class="col-md-1 text-center hidden-xs">Excelente</div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0px 0px 0px 0px" ng-show="evaluacion.tipoevaluacionCodigo==1 || evaluacion.tipoevaluacionCodigo==2">
+                    <div class="col-md-12 col-xs-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 20px 15px;" ng-repeat="item in evaluacion.funciones">
+                        <div class="col-md-5 col-xs-12" style="font-size: 12px">
+                            {{ item.funcionNombre }}
+                        </div>
+                        <div style="font-size: 12px" class="col-md-2 hidden-xs">{{ item.competenciaConductas }}</div>
+
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.funcionValorObtenido" value="-1" name="com_{{ item.funcionCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="text-info">No Aplica</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.funcionValorObtenido" value="1" name="com_{{ item.funcionCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="text-danger">Deficiente</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.funcionValorObtenido" value="2" name="com_{{ item.funcionCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Aceptable</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.funcionValorObtenido" value="3" name="com_{{ item.funcionCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Bueno</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.funcionValorObtenido" value="4" name="com_{{ item.funcionCodigo }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Excelente</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br><br>
+
+                <!-- 3 recomendaciones -->
+                <div role="alert" class="alert alert-success alert-icon alert-dismissible" ng-show="evaluacion.tipoevaluacionCodigo==1">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>3. Recomendaciones</strong>
+                    </div>
+                </div>
+
+                <div class="panel-body" ng-show="evaluacion.tipoevaluacionCodigo==1">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">¿El contrato debe continuar?</label>
+                        <div class="col-sm-6">
+                            <div class="">
+                                <input type="radio" value="S" name="rec1" id="rec1" ng-model="evaluacion.evaluacionUsuarioRecomendacion" ng-required='evaluacion.tipoevaluacionCodigo!=2' />
+                                <label for="rec1">Sí</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" value="N" name="rec1" id="rec1" ng-model="evaluacion.evaluacionUsuarioRecomendacion" ng-required='evaluacion.tipoevaluacionCodigo!=2' />
+                                <label for="rec1">No</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 observaciones -->
+                <div role="alert" class="alert alert-danger alert-icon alert-dismissible">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong ng-hide="evaluacion.tipoevaluacionCodigo==2">4. Observaciones</strong>
+                        <strong ng-show="evaluacion.tipoevaluacionCodigo==2">3. Observaciones</strong>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-6">
+                            <!--<textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required>{{ evaluacion.observaciones }}</textarea>-->
+                            <textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default md-close" style="width:90px;">Salir</button>
+                <button type="submit" data-dismiss="modal" class="btn btn-success" style="width:90px;">Finalizar</button>
+            </div>
+        </div>
+    </form>
+
+
+    <form ng-submit="guardaevaluacion()" ng-show="evaluacion.tipoevaluacionCodigo==3" id="formEval2">
+        <div class="md-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+
+                <h3 class="modal-title">{{ selectEvalEva.tipoevaluacionNombre | getNombrePropio:false }} - {{ selectEvalEva.evaluacionFechaCreacion | limitTo:7 | limitTo:-2 | nombremes}} {{ selectEvalEva.evaluacionFechaCreacion | limitTo:10 | limitTo:4}}</h3>
+            </div>
+
+            <div class="modal-body evlahei" style="overflow-y: scroll;-webkit-overflow-scrolling: touch;">
+
+                <div class="list-group tickets" id="header">
+                    <div class="list-group-item" href="#" style="overflow: hidden;margin-bottom: 10px;background: #F2F2F2;border-radius: 4px;border: 0;">
+                        <div class="col-sm-12 col-md-12">
+                            <img class="avatar" id="avatar" style="width: 68px;height: 68px" ng-src="{{ (selectUsuaEva.usuarioFoto | getValidaImagen:'U' ) }}?v={{rand}}">
+
+                            <div class="col-md-9" style="padding-left:20px;">
+                                <span><b>{{ selectUsuaEva.usuarioNombre1 + ' ' + selectUsuaEva.usuarioNombre2 + ' ' + selectUsuaEva.usuarioApellido1 + ' ' + selectUsuaEva.usuarioApellido2 | getNombrePropio:true}}</b></span><br>
+                                <span>{{ selectUsuaEva.cargoNombre | getNombrePropio:true }}</span><br>
+                                <span class="text-danger">{{ selectUsuaEva.relacionNombre }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8" style="top:16px">
+                            <span class="pull-right">
+                                <div class="fact-data text-right">
+                                    <!--<h3 id="resultado" class="ng-binding">Nivel de Habilidad: Logrado</h3>-->
+                                </div>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Comepetencias -->
+                <!--<h4 class="text-warning">Competencias</h4>-->
+                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>1. COMPETENCIAS</strong><br>Las siguientes competencias han sido seleccionadas como primordiales y necesarias en la gestión de un líder MT, y se han segmentado en diferentes comportamientos dónde se puede apreciar de mejor
+                        manera la competencia. Por favor dar una calificación a cada comportamiento del evaluado de acuerdo a la tabla que se encuentra a continuación.<br>
+
+                    </div>
+                </div>
+
+                <!-- Conductas -->
+                <div class="row" ng-repeat="(key, value) in evaluacion.competencias | groupBy: 'nom_competencia'" style="margin: 0px 0px 0px 0px" ng-show="evaluacion.tipoevaluacionCodigo==3">
+
+                    <div class="col-md-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 20px 15px;">
+                        <div class="col-md-8 col-xs-12"><b class="text-info">{{ key }}</b></span>
+                        </div>
+
+                        <div class="col-md-1 text-center text-danger hidden-xs">Deficiente</div>
+                        <div class="col-md-1 text-center hidden-xs">Aceptable</div>
+                        <div class="col-md-1 text-center hidden-xs">Bueno</div>
+                        <div class="col-md-1 text-center hidden-xs">Excelente</div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12" style="border-bottom:1px solid #dddddd;padding: 12px 0px 12px 15px;" ng-repeat="item in value">
+                        <div class="col-md-8" style="font-size: 12px">
+                            {{ item.nom_conducta }}
+                        </div>
+
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.conductaValorObtenido" value="1" name="com_{{ item.cod_conducta }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label class="text-danger">Deficiente</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.conductaValorObtenido" value="3" name="com_{{ item.cod_conducta }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Aceptable</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.conductaValorObtenido" value="3" name="com_{{ item.cod_conducta }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Bueno</label>
+                            </div>
+                        </div>
+                        <div class="text-center-not-xs col-md-1 col-xs-12">
+                            <div class="col-xs-2 col-md-12">
+                                <input type="radio" ng-model="item.conductaValorObtenido" value="4" name="com_{{ item.cod_conducta }}" required>
+                            </div>
+
+                            <div class="col-xs-5 visible-xs">
+                                <label>Excelente</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Conductas END -->
+
+                <br><br>
+
+                <!-- 4 observaciones -->
+                <div role="alert" class="alert alert-danger alert-icon alert-dismissible">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>2. Observaciones</strong>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-6">
+                            <!--<textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required>{{ evaluacion.observaciones }}</textarea>-->
+                            <textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default md-close" style="width:90px;">Salir</button>
+                <button type="submit" data-dismiss="modal" class="btn btn-success" style="width:90px;">Finalizar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Nifty Modal Comunicaciones -->
+<div id="empresa-comunicacion" class="md-modal colored-header success md-effect-10">
+    <div style="width: 900px;" class="md-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+            <h3 class="modal-title">{{ infoComu.comunicacionAsunto | getNombrePropio:false }}</h3>
+        </div>
+        <div class="modal-body">
+            <div class="text-left">
+                <p style="max-height: 400px;overflow: auto;">{{ infoComu.comunicacionTexto }}</p>
+            </div>
+        </div>
+        <div class="modal-footer" style="background-color: rgba(85, 85, 85, 0.22)" ng-show="infoComu.comunicacionArchivo">
+
+
+            <div class="spacer pull-left">
+                <nav>
+                    <ul class="pagination pagination-lg" style="margin: 0px 0px;">
+                        <li>
+                            <a>
+                                <span class="iconmoon" ng-class="(infoComu.comunicacionArchivo | iconoarchivo:'i')" style="font-size: 15pt;color: {{ (infoComu.comunicacionArchivo | iconoarchivo:'c') }}" ng-click="openFile(infoComu.comunicacionArchivo)" tooltips tooltip-template="Archivo"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-success md-close">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MOdal para registro objetivos -->
+<div id="evaluacion-objetivos-info" class="md-modal colored-header success md-effect-10 col-md-12" style="width: 100% !important;max-width: 1100px !important;">
+
+    <div class="md-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+            <h3 class="modal-title">Registro de Objetivos</h3>
+        </div>
+
+        <div class="modal-body" style="background-color:#ffffff; padding:0px; overflow:scroll; height:70vh;">
+
+            <div class="col-md-12 col-xs-12" style="padding:0px 10px; background-color:#f9f9f9; height:70px">
+
+				<!-- foto -->
+                <div class="col-md-1 col-xs-1 text-center" style="padding-top:10px; border: solid 0px #000000; height:70px;">
+                    <img src="/assets/img/avatar_f.jpg?v=20170309095723" style="border-radius: 50%;width: 50px;height: 50px">
+                </div>
+
+				<!-- nombre y cargo -->
+                <div class="col-md-9 col-xs-9" style="padding-top:15px; border: solid 0px #000000; height:70px;">
+                    <span><b>{{ itemUsuaObjeRecu.usuarioNombre1 + ' ' + itemUsuaObjeRecu.usuarioApellido1 | getNombrePropio:false }}</b></span><br>
+                    <span>{{ itemUsuaObjeRecu.cargoNombre | getNombrePropio:false }}</span></br>
+                </div>
+
+				<!-- numero de objetivos -->
+                <div class="col-md-2 col-xs-2 text-center" style="padding-top:15px; border: solid 0px #000000; height:70px;">
+                    <span class="text-danger">{{ itemUsuaObjeRecu.objetivos | keylength }}<br>objetivos</span>
+                </div>
+
+				<!-- % de ingreso -->
+                <!-- <div class="col-xs-offset-3 col-lg-2 col-md-2 col-sm-2 text-center" ng-if="(((itemUsuaObjeRecu.objetivos | keylength)==0)?0:(itemUsuaObjeRecu.objetivos | map: formatearreglo | sum)) | isNumber">
+                    <span class="chart" chartgraf data-percent="{{ (((itemUsuaObjeRecu.objetivos | keylength)==0)?0:(itemUsuaObjeRecu.objetivos | map: formatearreglo | sum)) }}">
+                        <span class="percent">{{ (((itemUsuaObjeRecu.objetivos | keylength)==0)?0:(itemUsuaObjeRecu.objetivos | map: formatearreglo | sum)) }}%</span>
+                    </span>
+                </div> -->
+
+            </div>
+
+            <div class="">
+
+                <div class="tab-content col-md-6">
+                    <form role="form" ng-submit="formObje.txtCodiObje==''?ingresaObjetivo():actualizaObjetivo()">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" ng-model="formObje.txtNombObje" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <input type="text" class="form-control" ng-model="formObje.txtDescObje" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Indicador</label>
+                            <input type="text" class="form-control" ng-model="formObje.txtIndiObje" required>
+                        </div>
+						<div class="form-group">
+                            <label>Medición</label>
+                            <select class="form-control" ng-model="formObje.txtMediObje" required>
+                                <option value="M">Mensual</option>
+                                <option value="T">Trimestral</option>
+                                <option value="S">Semestral</option>
+                                <option value="A">Anual</option>
+                                <option value="C">Continua</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Peso</label>
+                            <div class="input-group xs-mb-15">
+                                <input type="text" class="form-control" ng-model="formObje.txtPesoObje" required>
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>                                                
+						<div class="form-group">
+                            <label>Valor base</label>
+                            <input type="text" class="form-control" ng-model="formObje.txtValoBaseObje" required>
+                        </div>
+						<div class="form-group">
+                            <label>Meta</label>
+                            <div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+                                <div class="col-md-6" style="padding:0px 10px 0px 0px;">
+                                    <select class="form-control" ng-model="formObje.cboMetaSimbObje" required>
+                                        <option value=">=">Mayor o igual (>=)</option>
+                                        <option value="<=">Menor o igual (<=)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6" style="padding:0px;">
+                                    <input type="text" class="form-control" ng-model="formObje.txtMetaValoObje" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-right" style="padding-top:60px;">
+                            <button type="submit" class="btn btn-space btn-primary">Guardar</button>
+                            <button class="btn btn-space btn-default">Limpiar</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <div class="tab-container tab-left col-md-6">
+
+                    <div class="tab-content">
+                        <table class="table table-condensed table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Objetivos</th>
+                                    <th class="number">%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in itemUsuaObjeRecu.objetivos">
+                                    <td><a style="cursor: pointer" ng-click="recuperaObjetivo(item)">{{ item.objetivoNombre }}</a></td>
+                                    <td class="number">{{ item.objetivoEvaluacionPeso }}%</td>
+                                    <td align="center">
+                                        <a style="cursor: pointer;" mw-confirm-click="eliminaObjetivo(item)" mw-confirm-click-message="Desea eliminar el objetivo?" class="icon" data-toggle="modal">
+                                            <i class="s7-trash text-danger text-center"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                <tr ng-if="(itemUsuaObjeRecu.objetivos | keylength)==0">
+                                    <td colspan=2 class="text-danger text-center">No tiene objetivos.</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-danger" ng-click="finalizaregistrobjetivo(itemUsuaObjeRecu)">Finalizar Registro</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default md-close">Salir</button>
+        </div>
+    </div>
+</div>
+
+<!-- MOdal para evaluar objetivos -->
+<div id="evaluacion-objetivos-eval" class="md-modal colored-header success md-effect-10 col-md-12" style="width: 100% !important;max-width: 1100px !important;">
+
+    <div class="md-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+            <h3 class="modal-title">Evaluación de Objetivos</h3>
+        </div>
+
+       <div class="modal-body" style="background-color:#ffffff; padding:0px; overflow:scroll; height:70vh;">
+
+            <div class="col-md-12 col-xs-12" style="padding:0px 10px; background-color:#f9f9f9; height:70px">
+
+                <!-- foto -->
+                <div class="col-md-1 col-xs-1 text-center" style="padding-top:10px; border: solid 0px #000000; height:70px;">
+                    <img src="/assets/img/avatar_f.jpg?v=20170309095723" style="border-radius: 50%;width: 50px;height: 50px">
+                </div>
+
+                <!-- nombre y cargo -->
+                <div class="col-md-9 col-xs-9" style="padding-top:15px; border: solid 0px #000000; height:70px;">
+                    <span><b>{{ itemUsuaObjeRecu.usuarioNombre1 + ' ' + itemUsuaObjeRecu.usuarioApellido1 | getNombrePropio:false }}</b></span><br>
+                    <span>{{ itemUsuaObjeRecu.cargoNombre | getNombrePropio:false }}</span></br>
+                </div>
+
+                <!-- numero de objetivos -->
+                <div class="col-md-2 col-xs-2 text-center" style="padding-top:15px; border: solid 0px #000000; height:70px;">
+                    <span class="text-danger">{{ itemUsuaObjeRecu.objetivos | keylength }}<br>objetivos</span>
+                </div>
+
+				<!-- % resultado -->
+                <!-- <div class="col-xs-offset-3 col-lg-2 col-md-2 col-sm-2 text-center">
+                    <span class="chart" chartgraf data-percent="0">
+                        <span class="percent">0%</span>
+                    </span>
+                </div> -->
+
+            </div>
+
+            <div class="">
+
+                <div class="tab-content col-md-12" style="background-color: #ffffff">
+                    <form role="form" ng-submit="finalizaevaluacionobjetivo()">
+
+                        <div class="col-md-12" style="padding-bottom:20px;" ng-repeat="item in itemUsuaObjeRecu.objetivos">
+
+                            <b>{{ item.objetivoNombre}}.</b>&nbsp;&nbsp;{{ item.objetivoDescripcion }}
+							<br>
+                            <span class="text-alt3" style="margin:0px">Meta {{ item.objetivoEvaluacionSimboloMeta }} {{ item.objetivoEvaluacionValorMeta }} &nbsp; &nbsp;&nbsp;Valor base: {{ item.objetivoEvaluacionValorBase }}</span>
+                            <br><br>
+
+                            <div class="form-group col-md-6">
+                                <label>Cumplimiento valor</label>
+                                <input type="text" class="form-control" ng-model="item.value_ValoCump" ng-change="calculaPorcentaje(item)" required/>
+                            </div>
+
+                            <div class="form-group  col-md-6">
+                                <label>Cumplimiento porcentaje</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-model="item.value_PorcCump" disabled style="background:#f7f7f7;"><span class="input-group-addon">%</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group  col-md-12" style="margint-top:-20px;">
+                                <label>Observaciones</label>
+                                <textarea class="form-control" ng-model="item.value_Obse" required></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-space btn-primary">Guardar</button>
+                            <button class="btn btn-space btn-default">Limpiar</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default md-close">Salir</button>
+        </div>
+    </div>
+</div>
+
+<!-- MOdal para capitulos elearning -->
+<div id="elearning-info" class="md-modal colored-header success md-effect-10 col-md-12" style="width: 100% !important;max-width: 1100px !important;">
+    <div class="md-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>
+            <h3 class="modal-title">{{ itemelearning.capacitacionVirtualTema }}</h3>
+        </div>
+        <div class="modal-body" style="background-color: #ebebeb">
+            <div class="text-center" style="    position: inherit;height: 69vh;overflow: auto;">
+                <div class="tab-container tab-left">
+                    <ul class="nav nav-tabs">
+
+                        <!--<li class="active"><a href="#tab3-1" data-toggle="tab">Capítulo 1</a></li>
+                        <li><a href="#tab3-2" data-toggle="tab">Capítulo 2</a></li>
+                        <li><a href="#tab3-3" data-toggle="tab">Capítulo 3</a></li>-->
+                        <li ng-class="$first?'active':''" ng-repeat="item in itemelearning.capitulos">
+                            <a href="#tab-{{ $index }}" data-toggle="tab">{{ item.capituloVirtualNombre | getNombrePropio:false }}</a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+
+                        <div id="tab-{{ $index }}" class="tab-pane fade" ng-repeat="item in itemelearning.capitulos" ng-class="$first?'active cont in':''">
+                            <h3 class="text-info">{{ item.capituloVirtualNombre | getNombrePropio:false }}</h3>
+                            <div style="margin-top: 20px" ng-bind-html="item.capituloVirtualTexto | sanitize"></div>
+
+
+                            <div class="modal-footer" style="background-color: rgba(85, 85, 85, 0.22);margin-top: 20px" ng-show="item.archivos">
+
+                                <div class="spacer pull-left col-md-12">
+                                    <nav>
+                                        <ul class="pagination pagination-lg col-md-12" style="margin: 0px 0px;">
+                                            <li ng-repeat="item_1 in item.archivos">
+                                                <a class="col-md-12 text-left" style="cursor: pointer" ng-click="openFile('http://docs.google.com/gview?url=' + item_1.capituloarchivoArchivo + '&embedded=true')">
+                                                    <span class="iconmoon " ng-class="(item_1.capituloarchivoArchivo | iconoarchivo:'i')" style="font-size: 18pt;color: {{ (item_1.capituloarchivoArchivo | iconoarchivo:'c') }}" tooltips tooltip-template="{{ item_1.capituloarchivoNombre | getNombrePropio:false }}"><b style="color: #555555;margin-left: 10px;font-size: 20px">{{ item_1.capituloarchivoNombre | getNombrePropio:false }}</b></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                            </div>
+
+
+                            <!-- <div class="col-md-12 text-left" ng-repeat="item_1 in item.archivos">
+                                <div class="iconmoon" ng-class="(item_1.capituloarchivoArchivo | iconoarchivo:'i')" style="font-size: 15pt;color: {{ (item_1.capituloarchivoArchivo | iconoarchivo:'c') }}" ng-click="openFile(item_1.capituloarchivoArchivo)" tooltips tooltip-template="Archivo">
+                                    <span style="color: #555555">{{ item_1.capituloarchivoNombre | getNombrePropio:false }}</span></div>
+                            </div>-->
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default md-close">Salir</button>
+        </div>
+    </div>
+</div>
+
+<!-- MOdal para evaluaciones elearning -->
+<div id="elearning-eval" class="md-modal colored-header success md-effect-10 col-md-12" style="width: 100% !important;max-width: 1100px !important;">
+    <form ng-submit="saveElearning()">
+
+        <div class="md-content">
+            <div class="modal-header">
+
+                <!--<button type="button" data-dismiss="modal" aria-hidden="true" class="close md-close"><i class="icon s7-close"></i></button>-->
+
+                <div id="counter" style="    float: right;font-size: 27px;color: #FFF;font-weight: 700;background-color: #3f4042;border: 8px solid #bfbebf;text-align: center;margin-bottom: 0px;margin-top: -10px;margin-right: 18px;width: 131px">timer</div>
+
+                <h3 class="modal-title">{{ itempregelearning.capacitacionVirtualTema }}
+
+                </h3>
+
+            </div>
+            <!--<div class="modal-body" style="position: inherit;height: 69vh;overflow: auto;" ng-if="itemelearningtmp.est_evaluacionusuario=='A'">-->
+            <div class="modal-body" style="position: inherit;height: 69vh;overflow: auto;" ng-if="itemelearningtmp.est_evaluacionusuario=='A'">
+
+                <div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>Preguntas:</strong> {{ itempregelearning.evaluacionVirtualNumePregExamen }}
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-12" ng-repeat="item in itempregelearning.preguntas" style="display: inline-block;margin-bottom: 20px;">
+                        <label class="col-md-12 control-label">
+                            <b>{{ ($index + 1) }}.</b> {{ item.tex_pregunta }}
+                        </label>
+                        <div class="col-md-12" ng-repeat="item_1 in item.respuestas">
+                            <!--<textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required>{{ evaluacion.observaciones }}</textarea>-->
+                            <div class="col-md-12 radio-inline" style="margin-left: 25px !important">
+                                <input type="radio" ng-model="item.value" required value="{{item_1.cod_respuesta}}" name="{{item.cod_pregunta}}" />{{item_1.tex_respuesta}}
+                            </div>
+
+                        </div>
+                        <br><br>
+                    </div>
+
+                </div>
+
+                <!--<div role="alert" class="alert alert-danger alert-icon alert-dismissible">
+                <div class="icon"><span class="s7-info"></span></div>
+                <div class="message">
+                    <strong>Observaciones</strong>
+
+                </div>
+            </div>-->
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-6">
+                            <!--<textarea class="form-control" ng-model="evaluacion.evaluacionUsuarioObservacion" required>{{ evaluacion.observaciones }}</textarea>-->
+                            <!--<textarea class="form-control" required />-->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="modal-body" style="position: inherit;height: 69vh;overflow: auto;" ng-if="itemelearningtmp.est_evaluacionusuario=='F'">
+                <!-- ng-if="itemelearningtmp.est_evaluacionusuario=='F'-->
+
+                <!-- ng-if="itemelearningtmp.apr_evaluacionusuario=='N'" -->
+                <!--<div role="alert" class="alert alert-warning alert-icon alert-dismissible">
+                    
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>Evaluación negada:</strong> {{ itemelearningtmp.res_evaluacionusuario | num }}%
+                    </div>
+                </div>-->
+
+                <div class="text-center">
+                    <!--<div class="i-circle text-success"><i class="icon s7-check"></i></div>-->
+                    <div class="text-center hidden-xs">
+
+                        <span class="chart" chartgraf size="200" linewidth="10" color="{{ itemelearningtmp.apr_evaluacionusuario=='N'?'#FF0000':'#49ad70' }}" data-percent="{{ itemelearningtmp.res_evaluacionusuario | num }}" style="margin-top: 0px;height: 200px;width: 200px">
+                                <span class="percent" ng-class="itemelearningtmp.apr_evaluacionusuario=='N'?'text-danger':'text-alt2'" style="left: 29%;top: 20%;font-size: 50px;">{{ itemelearningtmp.res_evaluacionusuario | num }}%</span>
+                        </span>
+
+                    </div>
+
+                    <p class="text-danger" ng-if="itemelearningtmp.apr_evaluacionusuario=='N'">Usted no ha aprobado el curso de e-learning.</p>
+
+                    <p class="text-alt3" ng-if="itemelearningtmp.apr_evaluacionusuario=='S'">Usted ha aprobado el curso de e-learning.</p>
+
+                    <br>
+                </div>
+
+
+                <!--ng-if="itemelearningtmp.apr_evaluacionusuario=='A'"-->
+                <!--<div role="alert" class="alert alert-success alert-icon alert-dismissible">
+                    
+                    <div class="icon"><span class="s7-info"></span></div>
+                    <div class="message">
+                        <strong>Evaluación aprobada:</strong> {{ itemelearningtmp.res_evaluacionusuario | num }}%
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <span class="title text-center">Preguntas <br>Totales</span>
+                            </div>
+                            <div class="panel-body text-center">
+                                <h1>{{ itemelearningtmp.totalPreguntas }}</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-alt3">
+                            <div class="panel-heading">
+                                <span class="title text-center">Preguntas <br>Correctas</span>
+                            </div>
+                            <div class="panel-body text-center">
+                                <h1>{{ itemelearningtmp.correctasPreguntas }}</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <span class="title text-center">Preguntas <br>Incorrectas</span>
+                            </div>
+                            <div class="panel-body text-center">
+                                <h1>{{ itemelearningtmp.incorrectasPreguntas }}</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-alt4">
+                            <div class="panel-heading">
+                                <span class="title text-center">Preguntas<br>Sin Contestar</span>
+                            </div>
+                            <div class="panel-body text-center">
+                                <h1>{{ itemelearningtmp.nocontestadasPreguntas }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" data-dismiss="modal" class="btn btn-success" ng-if="itemelearningtmp.est_evaluacionusuario=='A'">Guardar</button>
+                <button type="button" data-dismiss="modal" ng-if="itemelearningtmp.est_evaluacionusuario!='A'" class="btn btn-default md-close" onclick="$('#elearning-eval').niftyModal('hide');">Salir</button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<div class="md-overlay" style="z-index:1999"></div>
+</div>
+
+<form-usuario></form-usuario>
+
+<script src="../../assets/lib/chartjs/Chart.min.js" type="text/javascript"></script>
+<script src="../../assets/js/dist/jquery.easypiechart.min.js"></script>
+
+<script src="../../assets/lib/jquery-flot/jquery.flot.js" type="text/javascript"></script>
+<script src="../../assets/lib/jquery-flot/jquery.flot.pie.js" type="text/javascript"></script>
+<script src="../../assets/lib/jquery-flot/jquery.flot.resize.js" type="text/javascript"></script>
+<script src="../../assets/lib/jquery-flot/plugins/jquery.flot.orderBars.js" type="text/javascript"></script>
+<script src="../../assets/lib/jquery-flot/plugins/curvedLines.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    varPrimary = "rgb(239, 98, 98)";
+    varSuccess = "rgb(122, 204, 190)";
+    varInfo = "rgb(141, 202, 223)";
+    varWarning = "rgb(255, 200, 112)";
+    varDanger = "rgb(239, 98, 98)";
+
+    //Radar 1
+    function radar_chart() {
+
+        var color1 = tinycolor(varDanger).lighten(6);
+        var color2 = tinycolor(varDanger).lighten(6.5);
+
+        var data = {
+            labels: ["Genera Innovación", "Comunicación Efectiva", "Dirección en el Trabajo", "Apasionado en el Trabajo", "Liderazgo", "Solución de Problemas"],
+            datasets: [{
+                    label: "My First dataset",
+                    fillColor: color2.setAlpha(.5).toString(),
+                    pointColor: color2.setAlpha(.8).toString(),
+                    strokeColor: color2.setAlpha(.8).toString(),
+                    highlightFill: color2.setAlpha(.75).toString(),
+                    highlightStroke: color2.toString(),
+                    data: [65, 59, 80, 81, 56, 55]
+                }
+                /*,
+                                 {
+                                 label: "My Second dataset",
+                                 fillColor: color1.setAlpha(.5).toString(),
+                                 pointColor: color1.setAlpha(.8).toString(),
+                                 strokeColor: color1.setAlpha(.8).toString(),
+                                 highlightFill: color1.setAlpha(.75).toString(),
+                                 highlightStroke: color1.toString(),
+                                 data: [28, 48, 40, 19, 86, 27]
+                                 }
+                                 */
+            ]
+        };
+
+        var radarChart = new Chart($("#radar-chart1").get(0).getContext("2d")).Radar(data, {
+            scaleShowLine: true,
+            responsive: true,
+            maintainAspectRatio: false,
+            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        });
+    }
+
+    //radar_chart();
+
+    function bar_chart() {
+
+        var color1 = tinycolor(varSuccess).lighten(5).toString();
+        var color2 = tinycolor(varSuccess).brighten(5).toString();
+
+        var plot_statistics = $.plot($("#barchart-mini1"), [{
+            data: [
+                [0, 1.5],
+                [1, 1.5],
+                [2, 1.9],
+                [3, 2.8],
+                [4, 3.0],
+                [5, 3.7],
+                [6, 3.5],
+                [7, 3.8],
+                [8, 2.6]
+            ],
+            label: "Page Views"
+        }], {
+            series: {
+                bars: {
+                    align: 'center',
+                    show: true,
+                    lineWidth: 1,
+                    barWidth: 0.8,
+                    fill: true,
+                    fillColor: {
+                        colors: [{
+                            opacity: 1
+                        }, {
+                            opacity: 1
+                        }]
+                    }
+                },
+                shadowSize: 0
+            },
+            legend: {
+                show: false
+            },
+            grid: {
+                margin: 0,
+                show: false,
+                labelMargin: 10,
+                axisMargin: 500,
+                hoverable: true,
+                clickable: true,
+                tickColor: "rgba(0,0,0,0.15)",
+                borderWidth: 0
+            },
+            colors: [color1, color2],
+            xaxis: {
+                ticks: 11,
+                tickDecimals: 0
+            },
+            yaxis: {
+                autoscaleMargin: 0.5,
+                ticks: 4,
+                tickDecimals: 0
+            }
+        });
+    }
+
+    //bar_chart();
+
+
+    $('#chart1').easyPieChart({
+        easing: 'easeOutElastic',
+        delay: 3000,
+        barColor: '#bad137',
+        trackColor: '#F9F9F9',
+        scaleColor: false,
+        lineWidth: 20,
+        trackWidth: 16
+    });
+
+    $('#chart2').easyPieChart({
+        easing: 'easeOutElastic',
+        delay: 3000,
+        barColor: '#E96656',
+        trackColor: '#F9F9F9',
+        scaleColor: false,
+        lineWidth: 20,
+        trackWidth: 16
+    });
+
+    /*
+     $(document).ready(function(){
+     // initialize the javascript
+     //App.init();
+     App.dashboard();
+     });
+     */
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        //initialize the javascript
+        //App.init();
+        //$('.md-trigger').modalEffects();
+
+
+    });
+</script>

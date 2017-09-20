@@ -1,0 +1,47 @@
+<div class="content">
+    <div>
+        <table class="table table-bordered"  datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+            <thead>
+            <tr>
+                <th class="text-center"><strong>Nombre</strong></th>
+                <th class="text-center"><strong>Acción</strong></th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <!-- lista de usuarios -->
+            <tr ng-repeat="item in data">
+                <td>{{ item[nombreitem] }}</td>
+                <td class="text-center">
+                    <a style="cursor: pointer" ng-click="seleccionar(item[codigoitem]);cargarCodigo(item,$index);"><i class="fa fa-pencil"></i></a>
+                    <a style="cursor: pointer" data-toggle="modal" data-target="#mod-warning" ng-click="cargarCodigo(item,$index);">
+                        <i class="fa fa-trash-o color-danger"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Warning -->
+<div class="modal fade" id="mod-warning" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="i-circle warning"><i class="fa fa-warning"></i></div>
+                    <h4>Warning!</h4>
+                    <p>¿Está seguro de Eliminar el Registro?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel">Cancel</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="btnProceed" ng-click="eliminar()">Proceed</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
