@@ -6,7 +6,12 @@
             $scope.tcarrera ="";
             $scope.variable ="5";
             $scope.resultado ="7.5";
-            $scope.total ="";
+            $scope.total = "";
+            
+            $scope.docentes ="";
+            $scope.primer = "";
+            $scope.graduados = "";
+            $scope.RTotal ="";
 
             $scope.changeBullet = function(type) {
 
@@ -276,6 +281,12 @@
               d3.event.stopPropagation();
               console.log(d.name);
               carrera = d.name;
+
+              $scope.docentes = d.children[0].docentes;
+              $scope.primer = d.children[0].primer;
+              $scope.graduados = d.children[0].graduados;
+              $scope.RTotal =d.children[0].total;
+  
 
               if (carrera == "Comex")
                 {
@@ -645,7 +656,7 @@
 
                //============================ INICIO funcion =========================
 
-               $scope.inittfuncion = function(data) 
+              /*  $scope.inittfuncion = function(data) 
                {
                    
                                         
@@ -732,7 +743,7 @@
                                
                               
                      }
-
+ */
    
                //============================ FIN funcion =========================
    
